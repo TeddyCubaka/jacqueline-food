@@ -7,7 +7,7 @@ export default function About() {
             Notre Histoire
           </h2>
           <p className="text-gray-600 text-lg mb-8">
-            Depuis 2015, nous nous engageons à produire des jus de fruits et
+            Depuis 2019, nous nous engageons à produire des jus de fruits et
             légumes de la plus haute qualité. Nos ingrédients sont soigneusement
             sélectionnés auprès de producteurs locaux et biologiques.
           </p>
