@@ -1,7 +1,17 @@
 export default function Hero() {
   return (
     <div id="home" className="relative pt-16">
-      <div className="bg-gradient-to-r from-green-500 to-green-700 h-screen">
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `url("/images/product-presentation.jpg")`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          filter: "blur(4px)",
+        }}
+      />
+      <div className="relative h-screen bg-black bg-opacity-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
           <div className="text-center w-full">
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
