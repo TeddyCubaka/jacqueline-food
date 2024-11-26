@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import logo from "@/../public/Logo.jpg";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,9 +10,10 @@ export default function Navbar() {
     <nav className="bg-white shadow-lg fixed w-full z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex items-center">
+          <div className="flex items-center overflow-hidden">
+            <Image src={logo} alt="hello" width={70} height={70} />
             <span className="text-2xl font-bold text-green-600">
-              Maison Jacqueline 
+              Maison Jacqueline
             </span>
           </div>
 

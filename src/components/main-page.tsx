@@ -24,11 +24,6 @@ const CompanyList: React.FC = () => {
       url: "https://www.instagram.com/maison.jacqueline/profilecard/?igsh=MTl4eGxoeWw5M3U2Nw==",
       name: "instagram",
     },
-    // {
-    //   url: "",
-    //   Icon: FaLinkedin,
-    //   name: "linkedin",
-    // },
     {
       url: "https://www.tiktok.com/@maisonjacqueline?_t=8r3fiP57vi1&_r=1",
       Icon: AiFillTikTok,

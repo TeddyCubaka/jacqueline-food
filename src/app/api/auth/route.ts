@@ -5,7 +5,8 @@ import path from "path";
 // Obtenir le chemin absolu du fichier db.json
 const dbPath = path.join(process.cwd(), "src", "db.json");
 
-export async function GET(request: Request) {
+export async function GET() {
+  // request: Request
   try {
     const dbData = JSON.parse(fs.readFileSync(dbPath, "utf8"));
 

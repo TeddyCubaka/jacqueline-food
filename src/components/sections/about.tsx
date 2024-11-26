@@ -16,7 +16,7 @@ export default function About() {
               <div className="text-green-600 text-4xl mb-4">🌱</div>
               <h3 className="text-xl font-semibold mb-2">100% Bio</h3>
               <p className="text-gray-600">
-                Ingrédients issus de l'agriculture biologique
+                Ingrédients issus de l&apos;agriculture biologique
               </p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
