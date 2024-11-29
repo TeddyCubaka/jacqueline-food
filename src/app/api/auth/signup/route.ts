@@ -3,17 +3,51 @@ import fs from "fs";
 import path from "path";
 import bcrypt from "bcrypt";
 
-// Obtenir le chemin absolu du fichier db.json
 const dbPath = path.join(process.cwd(), "src", "db.json");
+
+type SignupBodyType = {
+  name?: string;
+  password?: string;
+  mail?: string;
+};
+
+const missedField = (field: string) => {
+  return NextResponse.json({
+    code: 400,
+    message: `le champs ${field} est obligatoire`,
+  });
+};
 
 export async function POST(request: Request) {
   try {
-    const dbData = JSON.parse(fs.readFileSync(dbPath, "utf8"));
+    let dbData = JSON.parse(fs.readFileSync(dbPath, "utf8"));
 
-    const reqBody = await request.json();
+    const reqBody: SignupBodyType = await request.json();
 
-    const saltRounds = 10; // Niveau de sécurité
-    const hashedPassword = await bcrypt.hash(reqBody.password, saltRounds);
+    if ("name" in reqBody == false) return missedField("name");
+    if ("password" in reqBody == false) return missedField("password");
+    if ("mail" in reqBody == false) return missedField("mail");
+
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(
+      reqBody.password || "",
+      saltRounds
+    );
+
+    if ("users" in dbData == false) dbData.users = [];
+
+    const existedUser = dbData.users.filter(
+      (user: any) => user.mail == reqBody.mail || user.name == reqBody.name
+    );
+
+    if (existedUser.length > 0)
+      return NextResponse.json(
+        {
+          code: 409,
+          message: "cet utilisateur existe deja dans le systeme",
+        },
+        { status: 409 }
+      );
 
     const newUser = {
       id: dbData.users.length + 1,
@@ -29,7 +63,7 @@ export async function POST(request: Request) {
     });
   } catch (error: any) {
     return NextResponse.json(
-      { message: "Error saving user", error: error.message },
+      { code: 400, message: "Error saving user", error: error.message },
       { status: 500 }
     );
   }
