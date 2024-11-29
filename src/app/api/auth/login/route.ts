@@ -2,16 +2,19 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken"; // Import JWT
 
 const dbPath = path.join(process.cwd(), "src", "db.json");
 
+const SECRET_KEY = "votre_clé_secrète"; // Utilisez une clé secrète sécurisée ou mettez-la dans les variables d'environnement
+
 type LoginBody = {
-  login: String;
+  login: string;
   password: string;
 };
 
 type User = {
-  id: Number;
+  id: number;
   name: string;
   password: string;
   mail: string;
@@ -20,21 +23,21 @@ type User = {
 const missedField = (field: string) => {
   return NextResponse.json({
     code: 400,
-    message: `le champs ${field} est obligatoire`,
+    message: `le champ ${field} est obligatoire`,
   });
 };
 
 export async function POST(request: Request) {
   try {
-    let dbData = JSON.parse(fs.readFileSync(dbPath, "utf8"));
+    const dbData = JSON.parse(fs.readFileSync(dbPath, "utf8"));
 
     const reqBody: LoginBody = await request.json();
 
-    if ("password" in reqBody == false) return missedField("password");
-    if ("login" in reqBody == false) return missedField("login");
+    if (!("password" in reqBody)) return missedField("password");
+    if (!("login" in reqBody)) return missedField("login");
 
-    let dbUser: User | null = dbData.users.find(
-      (user: any) => user.mail == reqBody.login || user.name == reqBody.login
+    const dbUser: User | null = dbData.users.find(
+      (user: any) => user.mail === reqBody.login || user.name === reqBody.login
     );
 
     if (dbUser == null)
@@ -42,15 +45,27 @@ export async function POST(request: Request) {
         code: 404,
         message: "mot de passe, mail ou nom d'utilisateur incorrect",
       });
-    const hashedPassword = await bcrypt.compare(
+
+    const passwordMatch = await bcrypt.compare(
       reqBody.password,
       dbUser.password
     );
-    if (!hashedPassword)
+    if (!passwordMatch)
       return NextResponse.json({
         code: 404,
         message: "mot de passe, mail ou nom d'utilisateur incorrect",
       });
+
+    // Génération du token
+    const token = jwt.sign(
+      {
+        id: dbUser.id,
+        name: dbUser.name,
+        mail: dbUser.mail,
+      },
+      SECRET_KEY,
+      { expiresIn: "1h" } // Le token expirera dans 1 heure
+    );
 
     const user = {
       id: dbUser.id,
@@ -61,10 +76,11 @@ export async function POST(request: Request) {
     return NextResponse.json({
       message: `bienvenue ${dbUser.name}`,
       data: user,
+      token, // Retourne le token dans la réponse
     });
   } catch (error: any) {
     return NextResponse.json(
-      { message: "Error saving user", error: error.message },
+      { message: "Erreur lors de la connexion", error: error.message },
       { status: 500 }
     );
   }
