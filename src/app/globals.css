@@ -6,4 +6,5 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: inter;
+  font-size: 14px;
 }

@@ -1,5 +1,7 @@
+"use client";
+
 const DashboardLayout = () => {
-  return <div>connected</div>;
+  return <div className=""></div>;
 };
 
 export default DashboardLayout;
