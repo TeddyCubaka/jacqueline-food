@@ -5,55 +5,123 @@ import Image from "next/image";
 import logo from "@/../public/Logo.jpg";
 import { IconType } from "react-icons";
 import { FaUsers } from "react-icons/fa6";
-import { CiCoffeeCup } from "react-icons/ci";
 import { AiFillProduct } from "react-icons/ai";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { FaRegUserCircle } from "react-icons/fa";
 import { BsFillFileBarGraphFill } from "react-icons/bs";
 import Link from "next/link";
+import { IoIosPeople } from "react-icons/io";
+import { RiShoppingBasket2Fill } from "react-icons/ri";
+import { IoChevronDownOutline, IoChevronForwardOutline } from "react-icons/io5";
 
 interface SideBarContent {
   link: string;
-  Icon: IconType;
+  Icon: IconType | null;
   path: string;
+  children: SideBarContent[];
+  panding?: number;
 }
 
 const SideBar = () => {
+  const router = useRouter();
   const menus: SideBarContent[] = [
     {
       Icon: BsFillFileBarGraphFill,
       link: "tableau de bord",
       path: "/dashboard",
-    },
-    {
-      Icon: CiCoffeeCup,
-      link: "jus",
-      path: "/dashboard/juice",
+      children: [],
     },
     {
       Icon: AiFillProduct,
-      link: "autres produits",
+      link: "produits",
+      path: "/dashboard/juice",
+      children: [],
+    },
+    {
+      Icon: RiShoppingBasket2Fill,
+      link: "commandes",
+      path: "/dashboard/order",
+      children: [
+        {
+          Icon: null,
+          link: "en attente",
+          path: "/dashboard/order?status=pending",
+          children: [],
+        },
+        {
+          Icon: null,
+          link: "en cours",
+          path: "/dashboard/order?status=in progress",
+          children: [],
+        },
+      ],
+    },
+    {
+      Icon: IoIosPeople,
+      link: "clients",
       path: "/dashboard/other-products",
+      children: [],
     },
     {
       Icon: FaUsers,
       link: "utilisateurs",
       path: "/dashboard/users",
+      children: [],
     },
   ];
 
   const pathname = usePathname();
-  const NavSection = ({ link, Icon, path }: SideBarContent) => {
+  const NavSection = ({
+    link,
+    Icon,
+    path,
+    children,
+    panding = 0,
+  }: SideBarContent) => {
+    const [displayChildrens, setDisplayChildrens] = useState<boolean>(false);
+    const ChivronComponent = () => {
+      return displayChildrens ? (
+        <IoChevronDownOutline />
+      ) : (
+        <IoChevronForwardOutline />
+      );
+    };
     return (
-      <Link
-        href={path}
-        className={
-          "px-2.5 py-2 text-nowrap rounded-md flex gap-2 font-light cursor-pointer hover:bg-gray-200 " +
-          (path == pathname && "border-x-2 border-green-500 bg-gray-100")
-        }
-      >
-        <Icon size={16} /> {link}
-      </Link>
+      <>
+        <div
+          onClick={() => {
+            if (children.length > 0) setDisplayChildrens(!displayChildrens);
+            else router.push(path);
+          }}
+          className={
+            "px-2.5 py-2 text-nowrap rounded-md flex gap-2 font-light cursor-pointer hover:bg-gray-200 " +
+            (path == pathname && "border-x-2 border-green-500 bg-gray-100")
+          }
+          style={{
+            marginLeft: `${panding}px`,
+          }}
+        >
+          <span className="flex justify-between w-full">
+            {Icon !== null ? <Icon size={16} /> : false} {link}
+            {children.length > 0 ? <ChivronComponent /> : false}
+          </span>
+        </div>
+        {displayChildrens && children.length > 0 ? (
+          <div>
+            {children.map((subMenu) => {
+              return (
+                <NavSection
+                  {...subMenu}
+                  key={subMenu.path}
+                  panding={panding + 30}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          false
+        )}
+      </>
     );
   };
   return (
