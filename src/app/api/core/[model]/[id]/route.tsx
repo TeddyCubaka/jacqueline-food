@@ -18,18 +18,22 @@ export async function GET(request: Request, { params }: Params) {
         { status: 400 }
       );
     }
-    const user = await prisma[model].findUnique({
+    const data = await prisma[model].findUnique({
       where: { id: id },
     });
 
-    if (!user) {
+    if (!data) {
       return NextResponse.json(
-        { code: 404, message: "Utilisateur introuvable" },
+        { code: 404, message: "donnée non trouvée" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({ params });
+    return NextResponse.json({
+      code: 200,
+      message: "donnees trouvées pour : " + model,
+      data,
+    });
   } catch (error: any) {
     return NextResponse.json(
       { code: 500, message: "Erreur interne du serveur", error: error.message },
