@@ -22,7 +22,20 @@ model User {
 
 model Currency {
   id   String @id @unique @default(uuid())
-  name String
+  name String @unique
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  updateBy  String?
+  createBy  String?
+  isDeleted Boolean?  @default(false)
+
+  products Product[]
+}
+
+model ProductCategory {
+  id   String @id @unique @default(uuid())
+  name String @unique
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
@@ -37,11 +50,13 @@ model Product {
   id          String @id @unique @default(uuid())
   url         String
   name        String
-  price       String
+  price       Float
   litrage     String
   description String
 
-  currencyId String
+  currencyId        String
+  productCategoryId String?
 
-  currency Currency @relation(fields: [currencyId], references: [id])
+  currency        Currency         @relation(fields: [currencyId], references: [id])
+  productCategory ProductCategory? @relation(fields: [productCategoryId], references: [id])
 }
