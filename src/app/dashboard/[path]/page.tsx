@@ -3,54 +3,55 @@ import Image from "next/image";
 import mangue33cl from "@/../public/images/jus/mangue.jpg";
 import tanagawizi33cl from "@/../public/images/jus/tangawizi-33cl.jpg";
 import ananas33cl from "@/../public/images/jus/ananas-33cl.jpg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataTable } from "@/components/table";
 import { FiDownload, FiPlus } from "react-icons/fi";
+import { useParams } from "next/navigation";
 
-type ProductType = {
-  id: number;
-  name: string;
-  price: string;
-  description: string;
-  litrage: string;
-  url: string;
-};
+// type ProductType = {
+//   id: number;
+//   name: string;
+//   price: string;
+//   description: string;
+//   litrage: string;
+//   url: string;
+// };
 
-const products: ProductType[] = [
-  {
-    id: 1,
-    name: "Jus de tangawizi",
-    price: "1.7 $",
-    description: "Tangawizi, citron et menthe",
-    litrage: "33cl",
-    url: tanagawizi33cl.src,
-  },
-  {
-    id: 2,
-    name: "Jus de mange",
-    price: "1.7 $",
-    description: "Épinards, céleri, pomme et gingembre",
-    litrage: "33cl",
-    url: mangue33cl.src,
-  },
-  {
-    id: 3,
-    name: "Jus d'ananas",
-    price: "1.7 $",
-    description: "100% Ananas",
-    litrage: "33cl",
-    url: ananas33cl.src,
-  },
-];
+// const products: ProductType[] = [
+//   {
+//     id: 1,
+//     name: "Jus de tangawizi",
+//     price: "1.7 $",
+//     description: "Tangawizi, citron et menthe",
+//     litrage: "33cl",
+//     url: tanagawizi33cl.src,
+//   },
+//   {
+//     id: 2,
+//     name: "Jus de mange",
+//     price: "1.7 $",
+//     description: "Épinards, céleri, pomme et gingembre",
+//     litrage: "33cl",
+//     url: mangue33cl.src,
+//   },
+//   {
+//     id: 3,
+//     name: "Jus d'ananas",
+//     price: "1.7 $",
+//     description: "100% Ananas",
+//     litrage: "33cl",
+//     url: ananas33cl.src,
+//   },
+// ];
 
-const productColumns = [
-  { key: "id", header: "id" },
-  { key: "name", header: "name" },
-  { key: "price", header: "price" },
-  { key: "description", header: "description" },
-  { key: "litrage", header: "litrage" },
-  { key: "url", header: "url" },
-];
+// const productColumns = [
+//   { key: "id", header: "id" },
+//   { key: "name", header: "name" },
+//   { key: "price", header: "price" },
+//   { key: "description", header: "description" },
+//   { key: "litrage", header: "litrage" },
+//   { key: "url", header: "url" },
+// ];
 
 const actions = (
   <div className="flex gap-2">
@@ -65,12 +66,51 @@ const actions = (
   </div>
 );
 
-export default function InvoicesPage() {
+export default function InvoicesPage({ params }: { params: any }) {
+  const { path } = useParams();
+  const [data, setData] = useState<{ [key: string]: any }[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`/api/core/${path}`, {
+          method: "GET",
+        });
+
+        const result = await res.json();
+
+        if (!res.ok) {
+          if ("message" in result) setError(result.message);
+          else throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
+        setData(result.data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) return <p>Chargement...</p>;
+  if (error) return <p>Erreur : {error}</p>;
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 bg-gray-50 min-h-screen max-w-[100%]">
       <DataTable
-        data={products}
-        columns={productColumns}
+        data={data}
+        columns={
+          data[0]
+            ? Object.keys(data[0]).map((column) => ({
+                key: column,
+                header: column,
+              }))
+            : []
+        }
         searchable
         searchKeys={["name", "price"]}
         selectable

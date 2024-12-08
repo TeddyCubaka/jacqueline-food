@@ -14,7 +14,7 @@ export async function GET(request: Request, { params }: Params) {
     if (!PrismaModel) {
       return NextResponse.json(
         { code: 404, message: `route non trouvé`, model: model },
-        { status: 400 }
+        { status: 404 }
       );
     }
     const prismaModel = prisma[model as keyof typeof prisma] as {
@@ -30,8 +30,8 @@ export async function GET(request: Request, { params }: Params) {
     });
   } catch (error: any) {
     return NextResponse.json(
-      { code: 500, message: "Erreur interne du serveur", error: error.message },
-      { status: 500 }
+      { code: 400, message: "Erreur interne du serveur", error: error.message },
+      { status: 400 }
     );
   }
 }

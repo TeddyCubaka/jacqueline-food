@@ -34,7 +34,7 @@ const SideBar = () => {
     {
       Icon: AiFillProduct,
       link: "produits",
-      path: "/dashboard/juice",
+      path: "/dashboard/product",
       children: [],
     },
     {
@@ -59,13 +59,13 @@ const SideBar = () => {
     {
       Icon: IoIosPeople,
       link: "clients",
-      path: "/dashboard/other-products",
+      path: "/dashboard/client",
       children: [],
     },
     {
       Icon: FaUsers,
       link: "utilisateurs",
-      path: "/dashboard/users",
+      path: "/dashboard/user",
       children: [],
     },
   ];
@@ -155,7 +155,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="h-full w-1/5 bg-white">
         <SideBar />
       </div>
-      <div className="w-full h-full">{children}</div>
+      <div className="overflow-hidden w-full">{children}</div>
     </div>
   );
 };
