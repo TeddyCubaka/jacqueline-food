@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
 import bcrypt from "bcrypt";
-
-const dbPath = path.join(process.cwd(), "src", "db.json");
+import { prisma } from "@/../lib/prisma";
 
 type SignupBodyType = {
   name?: string;
@@ -20,42 +17,38 @@ const missedField = (field: string) => {
 
 export async function POST(request: Request) {
   try {
-    let dbData = JSON.parse(fs.readFileSync(dbPath, "utf8"));
-
     const reqBody: SignupBodyType = await request.json();
 
-    if ("name" in reqBody == false) return missedField("name");
-    if ("password" in reqBody == false) return missedField("password");
-    if ("mail" in reqBody == false) return missedField("mail");
+    if (!reqBody.name) return missedField("name");
+    if (!reqBody.password) return missedField("password");
+    if (!reqBody.mail) return missedField("mail");
 
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(
-      reqBody.password || "",
-      saltRounds
-    );
+    const existedUser = await prisma.user.findFirst({
+      where: {
+        OR: [{ mail: reqBody.mail }, { name: reqBody.name }],
+      },
+    });
 
-    if ("users" in dbData == false) dbData.users = [];
-
-    const existedUser = dbData.users.filter(
-      (user: any) => user.mail == reqBody.mail || user.name == reqBody.name
-    );
-
-    if (existedUser.length > 0)
+    if (existedUser) {
       return NextResponse.json(
         {
           code: 409,
-          message: "cet utilisateur existe deja dans le systeme",
+          message: "Cet utilisateur existe déjà dans le système",
         },
         { status: 409 }
       );
+    }
 
-    const newUser = {
-      id: dbData.users.length + 1,
-      ...{ ...reqBody, password: hashedPassword },
-    };
-    dbData.users.push(newUser);
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(reqBody.password, saltRounds);
 
-    fs.writeFileSync(dbPath, JSON.stringify(dbData, null, 2), "utf8");
+    const newUser = await prisma.user.create({
+      data: {
+        name: reqBody.name,
+        password: hashedPassword,
+        mail: reqBody.mail,
+      },
+    });
 
     return NextResponse.json({
       message: "User added successfully!",
