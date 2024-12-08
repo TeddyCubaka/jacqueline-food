@@ -38,7 +38,7 @@ export async function GET(request: Request, { params }: Params) {
 
 export async function POST(request: Request, { params }: Params) {
   try {
-    const { model } = params;
+    const { model } = await params;
 
     if (!(model in prisma)) {
       return NextResponse.json(
@@ -67,9 +67,20 @@ export async function POST(request: Request, { params }: Params) {
       data: createdRecord,
     });
   } catch (error: any) {
-    // Gestion des erreurs
+    if (error.code === "P2002") {
+      return NextResponse.json(
+        {
+          code: 409,
+          message: "Un élément avec une valeur unique existe déjà.",
+          details: {
+            fields: error.meta?.target,
+          },
+        },
+        { status: 409 }
+      );
+    }
     return NextResponse.json(
-      { code: 500, message: "Erreur interne du serveur", error: error.message },
+      { code: 400, message: "une erreur s'est produite", error: error.message },
       { status: 500 }
     );
   }
