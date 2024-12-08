@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { DataTable } from "@/components/table";
 import { FiDownload, FiPlus } from "react-icons/fi";
 import { useParams } from "next/navigation";
+import { ResponseData } from "@/types/reponse-data.type";
+import { DisplayColumn } from "@/app/api/core/[model]/config-data";
 
 // type ProductType = {
 //   id: number;
@@ -68,7 +70,7 @@ const actions = (
 
 export default function InvoicesPage({ params }: { params: any }) {
   const { path } = useParams();
-  const [data, setData] = useState<{ [key: string]: any }[]>([]);
+  const [data, setData] = useState<ResponseData | null>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -79,14 +81,13 @@ export default function InvoicesPage({ params }: { params: any }) {
           method: "GET",
         });
 
-        const result = await res.json();
-
+        const result: ResponseData = await res.json();
         if (!res.ok) {
           if ("message" in result) setError(result.message);
           else throw new Error(`HTTP error! status: ${res.status}`);
         }
 
-        setData(result.data);
+        setData(result);
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -102,17 +103,10 @@ export default function InvoicesPage({ params }: { params: any }) {
   return (
     <div className="p-6 bg-gray-50 min-h-screen max-w-[100%]">
       <DataTable
-        data={data}
-        columns={
-          data[0]
-            ? Object.keys(data[0]).map((column) => ({
-                key: column,
-                header: column,
-              }))
-            : []
-        }
+        data={data?.data || []}
+        columns={data?.meta?.displayColumns || []}
         searchable
-        searchKeys={["name", "price"]}
+        searchKeys={data?.meta?.searchKeys}
         selectable
         actions={actions}
       />

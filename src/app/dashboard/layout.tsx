@@ -63,6 +63,25 @@ const SideBar = () => {
       children: [],
     },
     {
+      Icon: RiShoppingBasket2Fill,
+      link: "parametres",
+      path: "/dashboard/params",
+      children: [
+        {
+          Icon: null,
+          link: "monaies",
+          path: "/dashboard/currency",
+          children: [],
+        },
+        {
+          Icon: null,
+          link: "categorie des produits",
+          path: "/dashboard/productCategory",
+          children: [],
+        },
+      ],
+    },
+    {
       Icon: FaUsers,
       link: "utilisateurs",
       path: "/dashboard/user",

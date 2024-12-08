@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/../lib/prisma";
+import * as config from "./config-data";
+import { ResponseData } from "@/types/reponse-data.type";
 
 type Params = {
   params: {
@@ -7,16 +9,21 @@ type Params = {
   };
 };
 
-export async function GET(request: Request, { params }: Params) {
+export async function GET(
+  request: Request,
+  { params }: Params
+): Promise<NextResponse<ResponseData>> {
   try {
     const { model } = await params;
     const PrismaModel = prisma[model];
     if (!PrismaModel) {
       return NextResponse.json(
-        { code: 404, message: `route non trouvé`, model: model },
+        { code: 404, message: `route non trouvé` },
         { status: 404 }
       );
     }
+    const verboseName = config[model as keyof typeof config].verboseName;
+
     const prismaModel = prisma[model as keyof typeof prisma] as {
       findMany: (args?: any) => Promise<any[]>;
     };
@@ -25,12 +32,17 @@ export async function GET(request: Request, { params }: Params) {
 
     return NextResponse.json({
       code: 200,
-      message: "donnees trouvées pour : " + model,
+      message: "donnees trouvées pour les " + verboseName,
       data,
+      meta: {
+        verboseName: verboseName,
+        displayColumns: config[model as keyof typeof config].displayColumns,
+        searchKeys: config[model as keyof typeof config].searchKeys,
+      },
     });
   } catch (error: any) {
     return NextResponse.json(
-      { code: 400, message: "Erreur interne du serveur", error: error.message },
+      { code: 400, message: "Une erreur s'est produite", error: error.message },
       { status: 400 }
     );
   }

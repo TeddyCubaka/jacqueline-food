@@ -21,8 +21,9 @@ model User {
 }
 
 model Currency {
-  id   String @id @unique @default(uuid())
-  name String @unique
+  id           String @id @unique @default(uuid())
+  name         String @unique
+  exchangeRate Float
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
@@ -56,6 +57,12 @@ model Product {
 
   currencyId        String
   productCategoryId String?
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  updateBy  String?
+  createBy  String?
+  isDeleted Boolean?  @default(false)
 
   currency        Currency         @relation(fields: [currencyId], references: [id])
   productCategory ProductCategory? @relation(fields: [productCategoryId], references: [id])
