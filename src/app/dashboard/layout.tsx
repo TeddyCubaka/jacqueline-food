@@ -102,7 +102,9 @@ const SideBar = () => {
           }}
         >
           <span className="flex justify-between w-full">
-            {Icon !== null ? <Icon size={16} /> : false} {link}
+            <span className="flex gap-2">
+              {Icon !== null ? <Icon size={16} /> : false} {link}
+            </span>
             {children.length > 0 ? <ChivronComponent /> : false}
           </span>
         </div>
