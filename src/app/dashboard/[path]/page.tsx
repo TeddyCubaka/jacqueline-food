@@ -18,6 +18,7 @@ const Actions = (props: { modelName: string | string[] | undefined }) => {
   const [formData, setFormData] = useState<{ [key: string]: any }>({});
   const [apiData, setApiData] = useState<{ [key: string]: any }>({});
   const [loading, setLoading] = useState<boolean>(true);
+  const [postToPath, setPostToPath] = useState<string>("");
   const [recap, setRecap] = useState<{
     status: AlertStatus;
     message: string;
@@ -46,7 +47,7 @@ const Actions = (props: { modelName: string | string[] | undefined }) => {
 
       const data: InputType[] = result.data;
       const formatModelData = new FormatModelData();
-
+      setPostToPath(result.meta?.postPath || `/api/core/${props.modelName}`);
       setForm(
         data.map((field) => {
           if (String(props.modelName) in formatModelData) {
@@ -163,20 +164,29 @@ const Actions = (props: { modelName: string | string[] | undefined }) => {
                 className="w-full flex  flex-col gap-2.5"
                 onSubmit={async (e) => {
                   e.preventDefault();
-                  const response = await fetch(`/api/core/${props.modelName}`, {
-                    method: "post",
-                    body: JSON.stringify(apiData),
-                  });
-                  const result = await response.json();
-                  setRecap({
-                    message: result.message,
-                    meta: result,
-                    status: result.code < 202 ? "success" : "error",
-                    code:
-                      result.code < 202
-                        ? "CREATION REUSSIE"
-                        : "ERREUR DE LA CREATION",
-                  });
+                  try {
+                    const response = await fetch(postToPath, {
+                      method: "post",
+                      body: JSON.stringify(apiData),
+                    });
+                    const result = await response.json();
+                    setRecap({
+                      message: result.message,
+                      meta: result,
+                      status: +result.code < 202 ? "success" : "error",
+                      code:
+                        +result.code < 202
+                          ? "CREATION REUSSIE"
+                          : "ERREUR DE LA CREATION",
+                    });
+                  } catch (error: any) {
+                    setRecap({
+                      message: error.message,
+                      meta: error.message,
+                      status: "error",
+                      code: "ERREUR SERVEUR",
+                    });
+                  }
                 }}
               >
                 {form.map((field) => (

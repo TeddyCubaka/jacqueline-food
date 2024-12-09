@@ -50,10 +50,14 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json({
-      message: "User added successfully!",
-      data: newUser,
-    });
+    return NextResponse.json(
+      {
+        code: 201,
+        message: "Utilisateur créé avec succès !",
+        data: newUser,
+      },
+      { status: 201 }
+    );
   } catch (error: any) {
     return NextResponse.json(
       { code: 400, message: "Error saving user", error: error.message },

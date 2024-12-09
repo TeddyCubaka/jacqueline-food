@@ -19,6 +19,7 @@ export interface ModelFormat {
   searchKeys: string[];
   form: InputType[];
   include?: { [key: string]: any };
+  postToPath?: string;
 }
 
 export const product: ModelFormat = {
@@ -134,18 +135,23 @@ export const user: ModelFormat = {
     { key: "createdAt", header: "ajouté le" },
   ],
   form: [
-    { label: "nom", proprety: "name", type: "text", placeholder: "nom" },
+    {
+      label: "nom",
+      proprety: "name",
+      type: "text",
+      placeholder: "Ex : john doe",
+    },
     {
       label: "adresse mail",
       proprety: "mail",
       type: "text",
-      placeholder: "adresse mail",
+      placeholder: "Ex : john.doe@mail.com",
     },
     {
-      label: "ajouté le",
+      label: "mot de passe",
       proprety: "password",
       type: "text",
-      placeholder: "ajouté le",
+      placeholder: "Ex: user@304djkei#kjdoe",
     },
   ],
   include: {},

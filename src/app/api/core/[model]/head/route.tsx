@@ -9,7 +9,7 @@ type Params = {
   };
 };
 
-const customPath = { user: "auth/signup" };
+const customPath = { user: "/api/auth/signup" };
 
 export async function GET(
   request: Request,
