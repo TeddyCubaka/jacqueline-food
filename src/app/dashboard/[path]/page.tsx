@@ -163,7 +163,6 @@ const Actions = (props: { modelName: string | string[] | undefined }) => {
                 className="w-full flex  flex-col gap-2.5"
                 onSubmit={async (e) => {
                   e.preventDefault();
-                  // console.log(formData);
                   const response = await fetch(`/api/core/${props.modelName}`, {
                     method: "post",
                     body: JSON.stringify(apiData),

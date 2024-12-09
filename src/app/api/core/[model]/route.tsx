@@ -29,7 +29,9 @@ export async function GET(
       findMany: (args?: any) => Promise<any[]>;
     };
 
-    const data = await prismaModel.findMany({});
+    const data = await prismaModel.findMany({
+      include: config[model as keyof typeof config].include,
+    });
 
     return NextResponse.json({
       code: 200,

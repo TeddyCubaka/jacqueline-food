@@ -20,6 +20,24 @@ export interface TableProps<T> {
   className?: string;
 }
 
+function getNestedValue(obj: any, path: string): any {
+  if (!obj || !path) return "_____";
+  if (typeof obj == "string") return obj;
+  if (typeof obj == "number") return obj;
+
+  const keys = path.split(".");
+  let current: any = obj;
+
+  for (const key of keys) {
+    if (current[key] === undefined) {
+      return "----";
+    }
+    current = current[key];
+  }
+
+  return current;
+}
+
 export function DataTable<T extends { id?: string | number }>({
   data,
   columns,
@@ -118,38 +136,42 @@ export function DataTable<T extends { id?: string | number }>({
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {currentData.map((item, index) => (
-              <tr
-                key={item.id || index}
-                className="hover:bg-gray-50 transition-colors"
-              >
-                {selectable && (
-                  <td className="px-4 py-3 whitespace-nowrap">
-                    <input
-                      type="checkbox"
-                      className="rounded border-gray-300"
-                      checked={selectedRows.includes(item)}
-                      onChange={() => handleSelectRow(item)}
-                    />
-                  </td>
-                )}
-                {columns.map((column) => (
-                  <td
-                    key={`${item.id || index}-${column.key}`}
-                    className="px-4 py-3 whitespace-nowrap text-sm text-gray-500"
-                  >
-                    {column.render
-                      ? column.render(item[column.key as keyof T], item)
-                      : String(item[column.key as keyof T])}
-                  </td>
-                ))}
-              </tr>
-            ))}
+            {currentData.map((item, index) => {
+              return (
+                <tr
+                  key={item.id || index}
+                  className="hover:bg-gray-50 transition-colors"
+                >
+                  {selectable && (
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <input
+                        type="checkbox"
+                        className="rounded border-gray-300"
+                        checked={selectedRows.includes(item)}
+                        onChange={() => handleSelectRow(item)}
+                      />
+                    </td>
+                  )}
+                  {columns.map((column) => (
+                    <td
+                      key={`${item.id || index}-${column.key}`}
+                      className="px-4 py-3 whitespace-nowrap text-sm text-gray-500"
+                    >
+                      {getNestedValue(
+                        item[column.key.split(".")[0] as keyof T],
+                        column.key.split(".").length > 1
+                          ? column.key.split(".").slice(1).join(".")
+                          : column.key
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between mt-4 px-4">
           <div className="text-sm text-gray-500">

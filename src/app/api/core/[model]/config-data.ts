@@ -30,17 +30,24 @@ export const product: ModelFormat = {
   displayColumns: [
     { key: "url", header: "url" },
     { key: "name", header: "nom" },
+    { key: "productCategory.name", header: "catégorie" },
     { key: "price", header: "prix" },
+    { key: "currency.name", header: "devise" },
     { key: "litrage", header: "litrage" },
     { key: "description", header: "description" },
-    { key: "currency.id", header: "devise" },
     { key: "createdAt", header: "ajouté le" },
-    { key: "productCategory.name", header: "catégorie" },
   ],
   form: [
     { label: "url", proprety: "url", type: "text", placeholder: "url" },
     { label: "nom", proprety: "name", type: "text", placeholder: "nom" },
     { label: "prix", proprety: "price", type: "number", placeholder: "prix" },
+    {
+      label: "devise",
+      proprety: "currencyId",
+      type: "select",
+      endpoint: "/api/core/currency",
+      placeholder: "devise",
+    },
     {
       label: "litrage",
       proprety: "litrage",
@@ -52,13 +59,6 @@ export const product: ModelFormat = {
       proprety: "description",
       type: "text",
       placeholder: "description",
-    },
-    {
-      label: "devise",
-      proprety: "currencyId",
-      type: "select",
-      endpoint: "/api/core/currency",
-      placeholder: "devise",
     },
     {
       label: "catégorie",
