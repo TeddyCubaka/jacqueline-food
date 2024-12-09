@@ -2,6 +2,8 @@ import Image from "next/image";
 import mangue33cl from "@/../public/images/jus/mangue.jpg";
 import tanagawizi33cl from "@/../public/images/jus/tangawizi-33cl.jpg";
 import ananas33cl from "@/../public/images/jus/ananas-33cl.jpg";
+import { useEffect, useState } from "react";
+import { ResponseData } from "@/types/reponse-data.type";
 
 type ProductType = {
   id: number;
@@ -11,33 +13,6 @@ type ProductType = {
   litrage: string;
   url: string;
 };
-
-const products: ProductType[] = [
-  {
-    id: 1,
-    name: "Jus de tangawizi",
-    price: "1.7 $",
-    description: "Tangawizi, citron et menthe",
-    litrage: "33cl",
-    url: tanagawizi33cl.src,
-  },
-  {
-    id: 2,
-    name: "Jus de mange",
-    price: "1.7 $",
-    description: "Épinards, céleri, pomme et gingembre",
-    litrage: "33cl",
-    url: mangue33cl.src,
-  },
-  {
-    id: 3,
-    name: "Jus d'ananas",
-    price: "1.7 $",
-    description: "100% Ananas",
-    litrage: "33cl",
-    url: ananas33cl.src,
-  },
-];
 
 const ProductCard = (product: ProductType) => {
   return (
@@ -71,14 +46,41 @@ const ProductCard = (product: ProductType) => {
   );
 };
 export default function Products() {
+  const [data, setData] = useState<ResponseData | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`/api/core/product`, {
+          method: "GET",
+        });
+
+        const result: ResponseData = await res.json();
+        if (!res.ok) {
+          if ("message" in result) setError(result.message);
+          else throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
+        setData(result);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <section id="products" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-12">
           Nos Jus Frais
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map((product) => (
+        <div className="flex justify-center gap-8">
+          {data?.data.map((product: ProductType) => (
             <ProductCard {...product} key={product.id} />
           ))}
         </div>
