@@ -10,7 +10,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { FaRegUserCircle } from "react-icons/fa";
 import { BsFillFileBarGraphFill } from "react-icons/bs";
 import Link from "next/link";
-import { IoIosPeople } from "react-icons/io";
+import { IoIosPeople, IoIosSettings } from "react-icons/io";
 import { RiShoppingBasket2Fill } from "react-icons/ri";
 import { IoChevronDownOutline, IoChevronForwardOutline } from "react-icons/io5";
 
@@ -63,7 +63,7 @@ const SideBar = () => {
       children: [],
     },
     {
-      Icon: RiShoppingBasket2Fill,
+      Icon: IoIosSettings,
       link: "parametres",
       path: "/dashboard/params",
       children: [
@@ -174,7 +174,9 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="h-full w-1/5 bg-white">
         <SideBar />
       </div>
-      <div className="overflow-hidden w-full">{children}</div>
+      <div className="overflow-hidden w-full flex justify-center items-center">
+        {children}
+      </div>
     </div>
   );
 };

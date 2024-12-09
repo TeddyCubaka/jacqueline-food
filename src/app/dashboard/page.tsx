@@ -208,7 +208,7 @@ export const Dashboard = () => {
 
 const DashboardLayout = () => {
   return (
-    <div className="">
+    <div className="w-full h-full">
       <div className="flex justify-between">
         <Dashboard />
       </div>

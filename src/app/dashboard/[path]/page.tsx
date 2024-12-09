@@ -215,7 +215,7 @@ const Actions = (props: { modelName: string | string[] | undefined }) => {
 
 export default function DashboardPage({ params }: { params: any }) {
   const { path } = useParams();
-  const [data, setData] = useState<ResponseData | null>();
+  const [data, setData] = useState<ResponseData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -244,9 +244,29 @@ export default function DashboardPage({ params }: { params: any }) {
   }, []);
 
   if (loading) return <p>Chargement...</p>;
-  if (error) return <p>Erreur : {error}</p>;
+  if (error && data !== null)
+    return (
+      <div className="flex flex-col gap-5 w-fit h-fit overflow-y-visible bg-white m-auto p-5 rounded-xl">
+        <JsonErrorAlert
+          message={data.message}
+          status={"error"}
+          errorDetails={data}
+          timestamp=""
+          code={data.code}
+          stack={true}
+        />
+        <div className="flex justify-end gap-4">
+          <button
+            className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 flex items-center gap-2"
+            onClick={() => {}}
+          >
+            refresh
+          </button>
+        </div>
+      </div>
+    );
   return (
-    <div className="p-6 bg-gray-50 min-h-screen max-w-[100%]">
+    <div className="p-6 bg-gray-50 min-h-screen max-w-[100%] w-full flex  h-full">
       <DataTable
         data={data?.data || []}
         columns={data?.meta?.displayColumns || []}

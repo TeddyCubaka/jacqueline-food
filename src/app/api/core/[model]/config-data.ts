@@ -148,8 +148,5 @@ export const user: ModelFormat = {
       placeholder: "ajouté le",
     },
   ],
-  include: {
-    currency: true,
-    productCategory: true,
-  },
+  include: {},
 };
