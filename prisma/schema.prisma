@@ -23,7 +23,7 @@ model User {
 model Currency {
   id           String @id @unique @default(uuid())
   name         String @unique
-  exchangeRate Float
+  exchangeRate Int
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt

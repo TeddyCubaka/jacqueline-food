@@ -5,6 +5,9 @@ export type InputType = {
   proprety: string;
   type?: "text" | "number" | "select" | "date" | "file" | "float";
   placeholder: string;
+  options?: Array<{ label: string; value: string | number }>;
+  endpoint?: string;
+  formatData?: (data: any) => Array<{ label: string; value: string | number }>;
 };
 
 export interface ModelFormat {
@@ -37,7 +40,7 @@ export const product: ModelFormat = {
   form: [
     { label: "url", proprety: "url", type: "text", placeholder: "url" },
     { label: "nom", proprety: "name", type: "text", placeholder: "nom" },
-    { label: "prix", proprety: "price", type: "text", placeholder: "prix" },
+    { label: "prix", proprety: "price", type: "number", placeholder: "prix" },
     {
       label: "litrage",
       proprety: "litrage",
@@ -53,14 +56,16 @@ export const product: ModelFormat = {
     {
       label: "devise",
       proprety: "currencyId",
-      type: "text",
+      type: "select",
+      endpoint: "/api/core/currency",
       placeholder: "devise",
     },
     {
       label: "catégorie",
       proprety: "productCategoryId",
-      type: "text",
+      type: "select",
       placeholder: "catégorie",
+      endpoint: "/api/core/productCategory",
     },
   ],
   include: {
@@ -75,8 +80,8 @@ export const productCategory: ModelFormat = {
     plural: "categories des produis",
   },
   displayColumns: [
-    { key: "id", header: "id" },
     { key: "name", header: "nom" },
+    { key: "createdAt", header: "ajouté le" },
   ],
   searchKeys: ["name"],
   form: [
@@ -110,7 +115,7 @@ export const currency: ModelFormat = {
     {
       label: "tax de change",
       proprety: "exchangeRate",
-      type: "text",
+      type: "number",
       placeholder: "taux de change",
     },
   ],

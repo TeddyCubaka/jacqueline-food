@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/../lib/prisma";
 import * as config from "./config-data";
 import { ResponseData } from "@/types/reponse-data.type";
+import { formatPrismaError } from "@/utils/format-prisma-error";
 
 type Params = {
   params: {
@@ -32,7 +33,7 @@ export async function GET(
 
     return NextResponse.json({
       code: 200,
-      message: "donnees trouvées pour les " + verboseName,
+      message: "donnees trouvées pour les " + verboseName.plural,
       data,
       meta: {
         verboseName: verboseName,
@@ -73,27 +74,15 @@ export async function POST(request: Request, { params }: Params) {
       data: body,
     });
 
-    return NextResponse.json({
-      code: 201,
-      message: `Enregistrement créé avec succès dans ${model}.`,
-      data: createdRecord,
-    });
-  } catch (error: any) {
-    if (error.code === "P2002") {
-      return NextResponse.json(
-        {
-          code: 409,
-          message: "Un élément avec une valeur unique existe déjà.",
-          details: {
-            fields: error.meta?.target,
-          },
-        },
-        { status: 409 }
-      );
-    }
     return NextResponse.json(
-      { code: 400, message: "une erreur s'est produite", error: error.message },
-      { status: 500 }
+      {
+        code: 201,
+        message: `Enregistrement créé avec succès dans ${model}.`,
+        data: createdRecord,
+      },
+      { status: 201 }
     );
+  } catch (error: any) {
+    return NextResponse.json(formatPrismaError(error), { status: 500 });
   }
 }

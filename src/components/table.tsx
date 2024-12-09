@@ -72,7 +72,6 @@ export function DataTable<T extends { id?: string | number }>({
 
   return (
     <div className="w-full">
-      {/* Header Section */}
       <div className="mb-6">
         <div className="flex justify-between items-center gap-4 mb-4">
           {searchable && (
@@ -92,7 +91,6 @@ export function DataTable<T extends { id?: string | number }>({
         </div>
       </div>
 
-      {/* Table */}
       <div className="overflow-x-auto rounded-lg border border-gray-200">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
