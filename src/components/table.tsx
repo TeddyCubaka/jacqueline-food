@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { FiSearch, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
@@ -157,11 +158,20 @@ export function DataTable<T extends { id?: string | number }>({
                       key={`${item.id || index}-${column.key}`}
                       className="px-4 py-3 whitespace-nowrap text-sm text-gray-500"
                     >
-                      {getNestedValue(
-                        item[column.key.split(".")[0] as keyof T],
-                        column.key.split(".").length > 1
-                          ? column.key.split(".").slice(1).join(".")
-                          : column.key
+                      {column.key == "url" ? (
+                        <Image
+                          src={String(item[column.key as keyof typeof item])}
+                          width={100}
+                          height={100}
+                          alt="url image"
+                        />
+                      ) : (
+                        getNestedValue(
+                          item[column.key.split(".")[0] as keyof T],
+                          column.key.split(".").length > 1
+                            ? column.key.split(".").slice(1).join(".")
+                            : column.key
+                        )
                       )}
                     </td>
                   ))}
