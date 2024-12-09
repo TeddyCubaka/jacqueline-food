@@ -42,6 +42,13 @@ export default function Navbar() {
             >
               Contact
             </a>
+
+            <a
+              href="/dashboard"
+              className="border-2 border-green-500 text-green-500 px-5 py-2.5 rounded-full hover:text-white hover:bg-green-500 transition hover:text-bold"
+            >
+              Connection
+            </a>
           </div>
 
           <div className="md:hidden flex items-center">
