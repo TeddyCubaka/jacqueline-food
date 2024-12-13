@@ -1,6 +1,6 @@
 "use client";
 import LoginComponent from "@/components/atoms/login.component";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import logo from "@/../public/Logo.jpg";
 import { IconType } from "react-icons";
@@ -9,7 +9,6 @@ import { AiFillProduct } from "react-icons/ai";
 import { usePathname, useRouter } from "next/navigation";
 import { FaRegUserCircle } from "react-icons/fa";
 import { BsFillFileBarGraphFill } from "react-icons/bs";
-import Link from "next/link";
 import { IoIosPeople, IoIosSettings } from "react-icons/io";
 import { RiShoppingBasket2Fill } from "react-icons/ri";
 import { IoChevronDownOutline, IoChevronForwardOutline } from "react-icons/io5";
@@ -167,6 +166,14 @@ const SideBar = () => {
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const [isUserConnected, setIsUserConnected] = useState<boolean>(false);
+  useEffect(() => {
+    const brutMjToken = localStorage.getItem("mjToken");
+    const brutMjUser = localStorage.getItem("mjUser");
+    if (brutMjToken !== null && brutMjUser !== null) {
+      if (brutMjUser !== "undefined")
+        setIsUserConnected(JSON.parse(brutMjUser));
+    }
+  }, []);
   if (!isUserConnected)
     return <LoginComponent setIsUserConnected={setIsUserConnected} />;
   return (

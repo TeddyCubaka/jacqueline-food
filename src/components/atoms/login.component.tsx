@@ -1,13 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { FaRegEye } from "react-icons/fa6";
-
-type LoginBody = {
-  email: string;
-  password: string;
-  rememberMe: boolean;
-};
+import logo from "@/../public/Logo.jpg";
+import Image from "next/image";
 
 const LoginComponent = ({
   setIsUserConnected,
@@ -81,8 +76,8 @@ const LoginComponent = ({
         return;
       }
       const data = await response.json();
-      localStorage.setItem("dpToken", JSON.stringify(data.token));
-      localStorage.setItem("dpUser", JSON.stringify(data.data));
+      localStorage.setItem("mjToken", JSON.stringify(data.token));
+      localStorage.setItem("mjUser", JSON.stringify(data.data));
       setIsUserConnected(true);
       router.push("/dashboard");
     } catch (error) {
@@ -97,15 +92,16 @@ const LoginComponent = ({
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 border p-5">
+      <div className="max-md:w-full w-1/3 space-y-8 flex flex-col items-center">
+        <Image src={logo} alt="hello" width={150} height={150} />
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Connectez-vous à votre compte
           </h2>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-6 w-full" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="email" className="sr-only">
@@ -238,18 +234,6 @@ const LoginComponent = ({
             </button>
           </div>
         </form>
-
-        <div className="text-center">
-          <p className="text-sm text-gray-600">
-            Pas encore de compte?{" "}
-            <a
-              href="/register"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
-            >
-              S'inscrire
-            </a>
-          </p>
-        </div>
       </div>
     </div>
   );
