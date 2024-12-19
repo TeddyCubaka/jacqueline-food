@@ -32,7 +32,7 @@ model Currency {
   isDeleted Boolean?  @default(false)
 
   products Product[]
-  Command  Command[]
+  Order    Order[]
 }
 
 model ProductCategory {
@@ -46,7 +46,7 @@ model ProductCategory {
   isDeleted Boolean?  @default(false)
 
   products Product[]
-  Command  Command[]
+  Order    Order[]
 }
 
 model Product {
@@ -69,7 +69,7 @@ model Product {
   currency        Currency         @relation(fields: [currencyId], references: [id])
   productCategory ProductCategory? @relation(fields: [productCategoryId], references: [id])
 
-  commandLines CommandLine[]
+  orderLines OrderLine[]
 }
 
 model Client {
@@ -86,18 +86,19 @@ model Client {
   isDeleted Boolean?  @default(false)
 }
 
-// enum CommandStatus {
+// enum OrderStatus {
 //   pending
 //   validate
 //   inProgress
 //   delivred
 // }
 
-model Command {
-  id         String @id @unique @default(uuid())
-  total      Float
-  clientId   String
-  currencyId String
+model Order {
+  id              String @id @unique @default(uuid())
+  total           Float
+  clientId        String
+  currencyId      String
+  referenceNumber String
 
   status   String
   isClosed String
@@ -111,12 +112,12 @@ model Command {
   client   Currency         @relation(fields: [clientId], references: [id])
   currency ProductCategory? @relation(fields: [currencyId], references: [id])
 
-  lines CommandLine[]
+  lines OrderLine[]
 }
 
-model CommandLine {
+model OrderLine {
   id        String @id @unique @default(uuid())
-  commandId String
+  orderId   String
   productId String
   quantity  String
 
@@ -126,6 +127,6 @@ model CommandLine {
   updatedAt DateTime? @updatedAt
   isDeleted Boolean?  @default(false)
 
-  command Command @relation(fields: [commandId], references: [id])
+  order   Order   @relation(fields: [orderId], references: [id])
   Product Product @relation(fields: [productId], references: [id])
 }
