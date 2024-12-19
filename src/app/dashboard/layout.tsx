@@ -181,7 +181,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="h-full w-1/5 bg-white">
         <SideBar />
       </div>
-      <div className="overflow-hidden w-full flex justify-center items-center">
+      <div className="overflow-y-auto overflow-x-hidden w-full flex justify-center items-center">
         {children}
       </div>
     </div>

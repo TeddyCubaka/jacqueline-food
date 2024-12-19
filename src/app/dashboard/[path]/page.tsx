@@ -18,7 +18,9 @@ const Actions = (props: { modelName: string | string[] | undefined }) => {
   const [formData, setFormData] = useState<{ [key: string]: any }>({});
   const [apiData, setApiData] = useState<{ [key: string]: any }>({});
   const [loading, setLoading] = useState<boolean>(true);
-  const [postToPath, setPostToPath] = useState<string>("");
+  const [postToPath, setPostToPath] = useState<string>(
+    `/api/core/${props.modelName}`
+  );
   const [recap, setRecap] = useState<{
     status: AlertStatus;
     message: string;
@@ -47,7 +49,6 @@ const Actions = (props: { modelName: string | string[] | undefined }) => {
 
       const data: InputType[] = result.data;
       const formatModelData = new FormatModelData();
-      setPostToPath(result.meta?.postPath || `/api/core/${props.modelName}`);
       setForm(
         data.map((field) => {
           if (String(props.modelName) in formatModelData) {
@@ -62,6 +63,7 @@ const Actions = (props: { modelName: string | string[] | undefined }) => {
             label: field.label,
             placeholder: field.placeholder,
             formatData: field.formatData,
+            proprety: field.proprety,
             setValue: (value) => {
               setFormData((prev) => ({ ...prev, [field.proprety]: value }));
               setApiData((prev) => ({
@@ -165,10 +167,13 @@ const Actions = (props: { modelName: string | string[] | undefined }) => {
                 onSubmit={async (e) => {
                   e.preventDefault();
                   try {
-                    const response = await fetch(postToPath, {
-                      method: "post",
-                      body: JSON.stringify(apiData),
-                    });
+                    const response = await fetch(
+                      `/api/core/${props.modelName}`,
+                      {
+                        method: "post",
+                        body: JSON.stringify(apiData),
+                      }
+                    );
                     const result = await response.json();
                     setRecap({
                       message: result.message,
@@ -276,7 +281,10 @@ export default function DashboardPage({ params }: { params: any }) {
       </div>
     );
   return (
-    <div className="p-6 bg-gray-50 min-h-screen max-w-[100%] w-full flex  h-full">
+    <div className="p-6 bg-gray-50 min-h-screen max-w-[100%] w-full flex  h-full flex-col gap-5">
+      <h1 className="text-lg font-semibold">
+        {data?.meta?.verboseName.single}
+      </h1>
       <DataTable
         data={data?.data || []}
         columns={data?.meta?.displayColumns || []}

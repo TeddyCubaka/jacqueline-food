@@ -1,6 +1,9 @@
+import { Button } from "@mui/material";
 import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { FiSearch, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { MdOutlineRemoveRedEye } from "react-icons/md";
 
 export interface Column<T> {
   key: string;
@@ -55,6 +58,8 @@ export function DataTable<T extends { id?: string | number }>({
   const [filteredData, setFilteredData] = useState<T[]>(data);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const router = useRouter();
+  const path = usePathname();
 
   useEffect(() => {
     if (searchable && searchTerm) {
@@ -134,6 +139,11 @@ export function DataTable<T extends { id?: string | number }>({
                   {column.header}
                 </th>
               ))}
+              <th
+                className={`px-4 py-3 text-left text-sm font-medium text-gray-500 tracking-wider w-40`}
+              >
+                action
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -175,6 +185,16 @@ export function DataTable<T extends { id?: string | number }>({
                       )}
                     </td>
                   ))}
+                  <td className="px-4 py-3 whitespace-nowrap w-fit">
+                    {/* <MdOutlineRemoveRedEye size={20}  /> */}
+                    <Button
+                      onClick={() => {
+                        router.push(`${path}/${item.id}`);
+                      }}
+                    >
+                      voir
+                    </Button>
+                  </td>
                 </tr>
               );
             })}
@@ -182,7 +202,7 @@ export function DataTable<T extends { id?: string | number }>({
         </table>
       </div>
 
-      {totalPages > 1 && (
+      {totalPages > -1 && (
         <div className="flex items-center justify-between mt-4 px-4">
           <div className="text-sm text-gray-500">
             Affichage {startIndex + 1} à{" "}

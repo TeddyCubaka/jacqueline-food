@@ -1,6 +1,6 @@
 const Loader = () => (
   <svg
-    className="animate-spin h-10 w-10 text-green-600"
+    className="animate-spin h-20 w-20 text-green-600"
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"

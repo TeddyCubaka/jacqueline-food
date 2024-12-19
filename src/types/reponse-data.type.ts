@@ -1,4 +1,4 @@
-import { DisplayColumn } from "@/app/api/core/[model]/config-data";
+import { DisplayColumn, InputType } from "@/app/api/core/[model]/config-data";
 
 export interface ResponseData {
   code: number;
@@ -12,5 +12,6 @@ export interface ResponseData {
     displayColumns: DisplayColumn[];
     searchKeys: string[];
     postPath?: string;
+    form?: InputType[];
   };
 }

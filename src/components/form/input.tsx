@@ -5,6 +5,7 @@ export type InputValueType = { errorMessage: string; value: any };
 export type InputPropsType = {
   label: string;
   type?: "text" | "number" | "select" | "date" | "file" | "float";
+  proprety: string;
   id?: string;
   placeholder: string;
   value: InputValueType;
@@ -72,9 +73,10 @@ const Input = (props: InputPropsType) => {
             value={value?.value}
             onChange={handleChange}
           >
+            <option value={""}>---</option>
             {dynamicOptions.map((option) => (
               <option key={option.value} value={option.value}>
-                {option.label}
+                {String(option.label)}
               </option>
             ))}
           </select>
