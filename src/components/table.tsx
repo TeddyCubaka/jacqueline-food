@@ -26,6 +26,7 @@ export interface TableProps<T> {
 }
 
 function getNestedValue(obj: any, path: string): any {
+  if (typeof obj == "boolean") return obj ? "oui" : "non";
   if (!obj || !path) return "_____";
   if (typeof obj == "string") return obj;
   if (typeof obj == "number") return obj;

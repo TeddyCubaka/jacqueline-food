@@ -192,12 +192,8 @@ export const client: ModelFormat = {
     {
       label: "Mon Whatsapp est ouvert",
       proprety: "isWhatsappOpen",
-      type: "select",
+      type: "boolean",
       placeholder: "",
-      options: [
-        { label: "oui", value: 'true' },
-        { label: "non", value: 'false' },
-      ],
     },
   ],
   include: {},

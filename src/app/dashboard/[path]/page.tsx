@@ -162,6 +162,7 @@ const Actions = (props: {
                       setRecap(null);
                       setErrorMessage("");
                       setOpenModal(false);
+                      props.refreshData()
                     }}
                   >
                     Terminer
@@ -263,8 +264,6 @@ export default function DashboardPage({ params }: { params: any }) {
         setRefreshData(false);
       }
     };
-    console.log(refreshData)
-
     if (refreshData) fetchData();
   }, [refreshData]);
 
