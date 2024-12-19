@@ -1,19 +1,13 @@
+import { InputType } from "@/app/api/core/[model]/config-data";
 import React, { useEffect, useState } from "react";
 
 export type InputValueType = { errorMessage: string; value: any };
 
-export type InputPropsType = {
-  label: string;
-  type?: "text" | "number" | "select" | "date" | "file" | "float";
-  proprety: string;
+export interface InputPropsType extends InputType {
   id?: string;
-  placeholder: string;
   value: InputValueType;
   setValue: (value: InputValueType) => void;
-  options?: Array<{ label: string; value: string | number }>;
-  endpoint?: string;
-  formatData?: (data: any) => Array<{ label: string; value: string | number }>;
-};
+}
 
 const Input = (props: InputPropsType) => {
   const {
@@ -75,7 +69,7 @@ const Input = (props: InputPropsType) => {
           >
             <option value={""}>---</option>
             {dynamicOptions.map((option) => (
-              <option key={option.value} value={option.value}>
+              <option key={String(option.value)} value={option.value}>
                 {String(option.label)}
               </option>
             ))}

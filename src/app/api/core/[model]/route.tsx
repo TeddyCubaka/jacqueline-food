@@ -44,6 +44,7 @@ export async function GET(
       },
     });
   } catch (error: any) {
+    console.log(error);
     return NextResponse.json(
       { code: 400, message: "Une erreur s'est produite", error: error.message },
       { status: 400 }

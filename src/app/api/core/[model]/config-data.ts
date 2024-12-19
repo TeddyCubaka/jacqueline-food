@@ -3,7 +3,7 @@ export type DisplayColumn = { key: string; header: string };
 export type InputType = {
   label: string;
   proprety: string;
-  type?: "text" | "number" | "select" | "date" | "file" | "float";
+  type?: "text" | "number" | "select" | "date" | "file" | "float" | "boolean";
   placeholder: string;
   options?: Array<{ label: string; value: string | number }>;
   endpoint?: string;
@@ -152,6 +152,52 @@ export const user: ModelFormat = {
       proprety: "password",
       type: "text",
       placeholder: "Ex: user@304djkei#kjdoe",
+    },
+  ],
+  include: {},
+};
+
+export const client: ModelFormat = {
+  verboseName: {
+    single: "client",
+    plural: "clients",
+  },
+  searchKeys: ["fullName", "phone"],
+  displayColumns: [
+    { key: "fullName", header: "nom complet" },
+    { key: "phone", header: "téléphone" },
+    { key: "address", header: "adresse" },
+    { key: "isWhatsappOpen", header: "whatsapp" },
+    { key: "createdAt", header: "ajouté le" },
+  ],
+  form: [
+    {
+      label: "nom complet",
+      proprety: "fullName",
+      type: "text",
+      placeholder: "Ex : john doe",
+    },
+    {
+      label: "numero de téléphone",
+      proprety: "phone",
+      type: "text",
+      placeholder: "Ex : +243 995 384 899",
+    },
+    {
+      label: "adresse physique",
+      proprety: "address",
+      type: "text",
+      placeholder: "Ex: kinshasa/mbobo",
+    },
+    {
+      label: "Mon Whatsapp est ouvert",
+      proprety: "isWhatsappOpen",
+      type: "select",
+      placeholder: "",
+      options: [
+        { label: "oui", value: 'true' },
+        { label: "non", value: 'false' },
+      ],
     },
   ],
   include: {},
