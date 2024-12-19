@@ -32,6 +32,7 @@ model Currency {
   isDeleted Boolean?  @default(false)
 
   products Product[]
+  Command  Command[]
 }
 
 model ProductCategory {
@@ -45,6 +46,7 @@ model ProductCategory {
   isDeleted Boolean?  @default(false)
 
   products Product[]
+  Command  Command[]
 }
 
 model Product {
@@ -66,4 +68,64 @@ model Product {
 
   currency        Currency         @relation(fields: [currencyId], references: [id])
   productCategory ProductCategory? @relation(fields: [productCategoryId], references: [id])
+
+  commandLines CommandLine[]
+}
+
+model Client {
+  id             String  @id @unique @default(uuid())
+  fullName       String
+  phone          String  @unique
+  address        String?
+  isWhatsappOpen Boolean @default(true)
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  updateBy  String?
+  createBy  String?
+  isDeleted Boolean?  @default(false)
+}
+
+// enum CommandStatus {
+//   pending
+//   validate
+//   inProgress
+//   delivred
+// }
+
+model Command {
+  id         String @id @unique @default(uuid())
+  total      Float
+  clientId   String
+  currencyId String
+
+  status   String
+  isClosed String
+
+  updateBy  String?
+  createBy  String?
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  isDeleted Boolean?  @default(false)
+
+  client   Currency         @relation(fields: [clientId], references: [id])
+  currency ProductCategory? @relation(fields: [currencyId], references: [id])
+
+  lines CommandLine[]
+}
+
+model CommandLine {
+  id        String @id @unique @default(uuid())
+  commandId String
+  productId String
+  quantity  String
+
+  updateBy  String?
+  createBy  String?
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  isDeleted Boolean?  @default(false)
+
+  command Command @relation(fields: [commandId], references: [id])
+  Product Product @relation(fields: [productId], references: [id])
 }
