@@ -3,7 +3,8 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { FiSearch, FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
+import notElement from "@/../public/utilities/missed-bottle.jpeg";
+import { isValidURL } from "@/utils/is-url";
 
 export interface Column<T> {
   key: string;
@@ -170,10 +171,18 @@ export function DataTable<T extends { id?: string | number }>({
                     >
                       {column.key == "url" ? (
                         <Image
-                          src={String(item[column.key as keyof typeof item])}
+                          src={
+                            String(item[column.key as keyof typeof item]) &&
+                            isValidURL(
+                              String(item[column.key as keyof typeof item])
+                            )
+                              ? String(item[column.key as keyof typeof item])
+                              : notElement
+                          }
                           width={100}
                           height={100}
                           alt="url image"
+                          className="border-2 border-green-500 rounded-md"
                         />
                       ) : (
                         getNestedValue(

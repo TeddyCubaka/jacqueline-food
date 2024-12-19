@@ -11,16 +11,16 @@ import Loader from "@/components/atoms/loader";
 import { AlertStatus, JsonErrorAlert } from "@/components/atoms/display-error";
 import { FormatModelData } from "@/utils/format-select-options";
 
-const Actions = (props: { modelName: string | string[] | undefined }) => {
+const Actions = (props: {
+  modelName: string | string[] | undefined;
+  refreshData: () => void;
+}) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   const [form, setForm] = useState<InputPropsType[]>([]);
   const [formData, setFormData] = useState<{ [key: string]: any }>({});
   const [apiData, setApiData] = useState<{ [key: string]: any }>({});
   const [loading, setLoading] = useState<boolean>(true);
-  const [postToPath, setPostToPath] = useState<string>(
-    `/api/core/${props.modelName}`
-  );
   const [recap, setRecap] = useState<{
     status: AlertStatus;
     message: string;
@@ -104,10 +104,17 @@ const Actions = (props: { modelName: string | string[] | undefined }) => {
           <FiPlus />
           Ajouter
         </button>
-        <button className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center gap-2">
+        <button
+          onClick={props.refreshData}
+          className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center gap-2"
+        >
+          <FiDownload />
+          Refraichir
+        </button>
+        {/* <button className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center gap-2">
           <FiDownload />
           Exporter
-        </button>
+        </button> */}
       </div>
       <Modal
         open={openModal}
@@ -233,6 +240,7 @@ export default function DashboardPage({ params }: { params: any }) {
   const [data, setData] = useState<ResponseData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [refreshData, setRefreshData] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -252,11 +260,13 @@ export default function DashboardPage({ params }: { params: any }) {
         setError(err.message);
       } finally {
         setLoading(false);
+        setRefreshData(false);
       }
     };
+    console.log(refreshData)
 
-    fetchData();
-  }, []);
+    if (refreshData) fetchData();
+  }, [refreshData]);
 
   if (loading) return <p>Chargement...</p>;
   if (error && data !== null)
@@ -291,7 +301,15 @@ export default function DashboardPage({ params }: { params: any }) {
         searchable
         searchKeys={data?.meta?.searchKeys}
         selectable
-        actions={<Actions modelName={path} />}
+        actions={
+          <Actions
+          refreshData={() => {
+              setRefreshData(true);
+              setLoading(true);
+            }}
+            modelName={path}
+          />
+        }
       />
     </div>
   );
