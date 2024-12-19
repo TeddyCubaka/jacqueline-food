@@ -52,7 +52,6 @@ export async function GET(request: Request, { params }: Params) {
   }
 }
 
-
 export async function PUT(request: Request, { params }: Params) {
   try {
     const { id, model } = params;
@@ -73,10 +72,7 @@ export async function PUT(request: Request, { params }: Params) {
     }
 
     const prismaModel = prisma[model as keyof typeof prisma] as unknown as {
-      update: (args: {
-        where: { id: string };
-        data: any;
-      }) => Promise<any>;
+      update: (args: { where: { id: string }; data: any }) => Promise<any>;
     };
 
     const updatedData = await prismaModel.update({
@@ -90,6 +86,40 @@ export async function PUT(request: Request, { params }: Params) {
       code: 200,
       message: `Mise à jour réussie pour le ${verboseName.single}`,
       data: updatedData,
+    });
+  } catch (error: any) {
+    return NextResponse.json(
+      { code: 500, message: "Erreur interne du serveur", error: error.message },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: Request, { params }: Params) {
+  try {
+    const { id, model } = await params;
+    const PrismaModel = prisma[model as keyof typeof prisma];
+    if (!PrismaModel) {
+      return NextResponse.json(
+        { code: 404, message: `route non trouvé` },
+        { status: 404 }
+      );
+    }
+    const verboseName = config[model as keyof typeof config].verboseName;
+
+    const prismaModel = prisma[model as keyof typeof prisma] as unknown as {
+      delete: (args?: { where: { id: string }; include: any }) => Promise<any>;
+    };
+
+    const data = await prismaModel.delete({
+      where: { id: id },
+      include: config[model as keyof typeof config].include || {},
+    });
+
+    return NextResponse.json({
+      code: 200,
+      message: `Suppression réussie pour le ${verboseName.single}`,
+      data,
     });
   } catch (error: any) {
     return NextResponse.json(

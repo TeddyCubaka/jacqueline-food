@@ -125,7 +125,7 @@ export default function DashboardPage({ params }: { params: any }) {
             className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 flex items-center gap-2"
             onClick={() => {
               if (error.status && error.code < 399) router.back();
-              router.refresh();
+              else setError(null);
             }}
           >
             {error.status && error.code < 399 ? "retour" : "rafraichir"}
@@ -184,6 +184,22 @@ export default function DashboardPage({ params }: { params: any }) {
               className="!shadow-none !rounded-none"
               variant="contained"
               color="error"
+              onClick={async () => {
+                let response: Response = await fetch(
+                  `/api/core/${path}/${id}`,
+                  {
+                    method: "delete",
+                  }
+                );
+                const data: ResponseData = await response.json();
+
+                setError({
+                  code: data.code,
+                  message: data.message,
+                  data: data,
+                  status: data.code > 399 ? "error" : "success",
+                });
+              }}
             >
               Supprimer
             </Button>
