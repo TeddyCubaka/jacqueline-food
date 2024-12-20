@@ -63,7 +63,7 @@ export async function POST(request: Request, { params }: Params) {
       );
     }
 
-    const body = await request.json();
+    let body = await request.json();
 
     if (!body || Object.keys(body).length === 0) {
       return NextResponse.json(
@@ -71,11 +71,14 @@ export async function POST(request: Request, { params }: Params) {
         { status: 400 }
       );
     }
-
+    const configModel = config[model as keyof typeof config];
+    if (configModel.postSave) body = await configModel.postSave(body);
+    console.log(body)
     const prismaModel: any = prisma[model as keyof typeof prisma];
     const createdRecord = await prismaModel.create({
       data: body,
     });
+
 
     return NextResponse.json(
       {
@@ -86,6 +89,6 @@ export async function POST(request: Request, { params }: Params) {
       { status: 201 }
     );
   } catch (error: any) {
-    return NextResponse.json(formatPrismaError(error), { status: 500 });
+    return NextResponse.json(formatPrismaError(error), { status: 400 });
   }
 }

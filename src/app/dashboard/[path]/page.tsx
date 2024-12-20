@@ -58,7 +58,7 @@ const Actions = (props: {
               ];
           }
           return {
-            type: field.type,
+            type: field.type || "text",
             endpoint: field.endpoint,
             label: field.label,
             placeholder: field.placeholder,
@@ -129,12 +129,12 @@ const Actions = (props: {
         }}
         className="flex justify-center items-center"
       >
-        <Card className="w-1/2 min-h-[30%] h-fit max-h-[80%] p-5 flex flex-col gap-5 justify-between">
+        <Card className="w-1/2 min-h-[30%] h-fit max-h-[80%] p-5 flex flex-col gap-5 justify-between overflow-y-auto">
           <h3 className="text-lg font-medium">{props.modelName}</h3>
           <div className="flex justify-center items-center h-full">
             {loading ? <Loader /> : false}
             {recap != null ? (
-              <div className="flex flex-col gap-5 w-full h-full overflow-y-visible">
+              <div className="flex flex-col gap-5 w-full h-full overflow-y-auto">
                 <JsonErrorAlert
                   message={errorMessage || recap.message}
                   status={recap.status}
@@ -162,7 +162,7 @@ const Actions = (props: {
                       setRecap(null);
                       setErrorMessage("");
                       setOpenModal(false);
-                      props.refreshData()
+                      props.refreshData();
                     }}
                   >
                     Terminer
@@ -302,7 +302,7 @@ export default function DashboardPage({ params }: { params: any }) {
         selectable
         actions={
           <Actions
-          refreshData={() => {
+            refreshData={() => {
               setRefreshData(true);
               setLoading(true);
             }}

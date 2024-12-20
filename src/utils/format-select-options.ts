@@ -15,4 +15,21 @@ export class FormatModelData {
         value: data.id,
       })),
   };
+
+  order: {
+    [key: string]: (
+      data: any
+    ) => Array<{ label: string; value: string | number }>;
+  } = {
+    currencyId: (currencies: { [key: string]: any }[]) =>
+      currencies.map((currency) => ({
+        label: currency.name,
+        value: currency.id,
+      })),
+    clientId: (datas: { [key: string]: any }[]) =>
+      datas.map((data) => ({
+        label: data.fullName,
+        value: data.id,
+      })),
+  };
 }

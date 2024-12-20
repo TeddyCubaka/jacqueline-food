@@ -47,7 +47,10 @@ const Input = (props: InputPropsType) => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     let newValue: string | number | boolean =
-      type === "number" ? +e.target.value || 0 : e.target.value;
+      type === "number" || type == "float"
+        ? +e.target.value || 0
+        : e.target.value;
+    if (type === "float") newValue = +e.target.value;
     if (type === "boolean") newValue = true;
     setValue({ ...value, value: newValue });
   };
@@ -95,7 +98,7 @@ const Input = (props: InputPropsType) => {
         ) : (
           <input
             className="w-full rounded border border-stroke bg-gray px-5 py-2 text-base text-black focus:border-primary focus-visible:outline-none"
-            type={type}
+            type={type == "float" ? "number" : type}
             name={label}
             placeholder={placeholder}
             id={id}

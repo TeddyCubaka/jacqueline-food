@@ -46,7 +46,6 @@ model ProductCategory {
   isDeleted Boolean?  @default(false)
 
   products Product[]
-  Order    Order[]
 }
 
 model Product {
@@ -84,6 +83,7 @@ model Client {
   updateBy  String?
   createBy  String?
   isDeleted Boolean?  @default(false)
+  orders     Order[]
 }
 
 // enum OrderStatus {
@@ -101,7 +101,7 @@ model Order {
   referenceNumber String
 
   status   String
-  isClosed String
+  isClosed Boolean @default(false)
 
   updateBy  String?
   createBy  String?
@@ -109,8 +109,8 @@ model Order {
   updatedAt DateTime? @updatedAt
   isDeleted Boolean?  @default(false)
 
-  client   Currency         @relation(fields: [clientId], references: [id])
-  currency ProductCategory? @relation(fields: [currencyId], references: [id])
+  client   Client    @relation(fields: [clientId], references: [id])
+  currency Currency? @relation(fields: [currencyId], references: [id])
 
   lines OrderLine[]
 }

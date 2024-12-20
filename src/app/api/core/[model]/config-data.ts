@@ -1,3 +1,5 @@
+import { prisma } from "@/../lib/prisma";
+
 export type DisplayColumn = { key: string; header: string };
 
 export type InputType = {
@@ -20,6 +22,7 @@ export interface ModelFormat {
   form: InputType[];
   include?: { [key: string]: any };
   postToPath?: string;
+  postSave?: (data: { [key: string]: any }) => Promise<{ [key: string]: any }>;
 }
 
 export const product: ModelFormat = {
@@ -197,4 +200,93 @@ export const client: ModelFormat = {
     },
   ],
   include: {},
+};
+
+export const order: ModelFormat = {
+  verboseName: {
+    single: "commande",
+    plural: "commandes",
+  },
+  searchKeys: ["referenceNumber"],
+  displayColumns: [
+    { key: "referenceNumber", header: "numéro de référence" },
+    { key: "client.fullName", header: "client" },
+    { key: "total", header: "total" },
+    { key: "currency.name", header: "devise" },
+    { key: "status", header: "statut" },
+    { key: "isClosed", header: "clôturée" },
+    { key: "createdAt", header: "ajouté le" },
+  ],
+  form: [
+    {
+      label: "total",
+      proprety: "total",
+      type: "number",
+      placeholder: "Ex : 3",
+    },
+    {
+      label: "client",
+      proprety: "clientId",
+      type: "select",
+      placeholder: "",
+      endpoint: "/api/core/client",
+      formatData: (data) => {
+        return data.map((value: { fullName: string; id: string }) => ({
+          label: value.fullName,
+          value: value.id,
+        }));
+      },
+    },
+    {
+      label: "devise",
+      proprety: "currencyId",
+      type: "select",
+      endpoint: "/api/core/currency",
+      placeholder: "devise",
+    },
+  ],
+  include: {
+    client: true,
+    currency: true,
+    lines: true,
+  },
+  postSave: async (data) => {
+    const now = new Date();
+    const todayStart = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      0,
+      0,
+      0,
+      0
+    );
+    const todayEnd = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      23,
+      59,
+      59,
+      999
+    );
+
+    const orderNumber = await prisma.order.count({
+      where: {
+        createdAt: {
+          gte: todayStart,
+          lte: todayEnd,
+        },
+      },
+    });
+
+    return {
+      ...data,
+      status: "pending",
+      referenceNumber: `${now
+        .getFullYear()
+        .toString()
+        .slice(2)}${now.getMonth()}${now.getDay()}-${orderNumber + 1}`,
+    };
+  },
 };
