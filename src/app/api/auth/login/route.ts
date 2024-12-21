@@ -13,10 +13,13 @@ type LoginBody = {
 };
 
 const missedField = (field: string) => {
-  return NextResponse.json({
-    code: 400,
-    message: `Le champ ${field} est obligatoire`,
-  });
+  return NextResponse.json(
+    {
+      code: 400,
+      message: `Le champ ${field} est obligatoire`,
+    },
+    { status: 400 }
+  );
 };
 
 export async function POST(request: Request) {
@@ -33,20 +36,26 @@ export async function POST(request: Request) {
     });
 
     if (!dbUser) {
-      return NextResponse.json({
-        code: 404,
-        message: "Mot de passe, mail ou nom d'utilisateur incorrect",
-      });
+      return NextResponse.json(
+        {
+          code: 404,
+          message: "Mot de passe, mail ou nom d'utilisateur incorrect",
+        },
+        { status: 404 }
+      );
     }
     const passwordMatch = await bcrypt.compare(
       reqBody.password,
       dbUser.password
     );
     if (!passwordMatch) {
-      return NextResponse.json({
-        code: 404,
-        message: "Mot de passe, mail ou nom d'utilisateur incorrect",
-      });
+      return NextResponse.json(
+        {
+          code: 404,
+          message: "Mot de passe, mail ou nom d'utilisateur incorrect",
+        },
+        { status: 404 }
+      );
     }
     const token = jwt.sign(
       {

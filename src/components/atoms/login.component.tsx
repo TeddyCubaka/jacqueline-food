@@ -66,20 +66,23 @@ const LoginComponent = ({
 
     try {
       const response = await fetch("/api/auth/login", {
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          login: formData.email,
+          password: formData.password,
+        }),
         method: "POST",
       });
+      const data = await response.json();
       if (!response.ok) {
         setErrors({
-          submit: "Erreur de connexion. Veuillez réessayer.",
+          submit: data.message || "Erreur de connexion. Veuillez réessayer.",
         });
         return;
       }
-      const data = await response.json();
       localStorage.setItem("mjToken", JSON.stringify(data.token));
       localStorage.setItem("mjUser", JSON.stringify(data.data));
       setIsUserConnected(true);
-      router.push("/dashboard");
+      // router.push("/dashboard");
     } catch (error) {
       console.log(error);
 
