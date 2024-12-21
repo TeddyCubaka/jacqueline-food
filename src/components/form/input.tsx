@@ -20,6 +20,7 @@ const Input = (props: InputPropsType) => {
     options,
     endpoint,
     formatData,
+    childrens,
   } = props;
 
   const [dynamicOptions, setDynamicOptions] = useState<
@@ -55,9 +56,98 @@ const Input = (props: InputPropsType) => {
     setValue({ ...value, value: newValue });
   };
 
+  const handleChildChange = (
+    lineIndex: number,
+    childProprety: string,
+    childValue: InputValueType
+  ) => {
+    const newValues = Array.isArray(value.value) ? [...value.value] : [];
+    newValues[lineIndex] = {
+      ...newValues[lineIndex],
+      [childProprety]: childValue.value,
+    };
+    setValue({ ...value, value: newValues });
+  };
+
   useEffect(() => {
-    if (type == "boolean") setValue({ ...value, value: value.value || false });
+    if (type === "boolean") setValue({ ...value, value: value.value || false });
+    if (type === "childrens" && !Array.isArray(value.value)) {
+      setValue({ ...value, value: [] });
+    }
   }, [type]);
+
+  useEffect(() => {
+    if (type === "childrens") {
+      console.log("Children props:", {
+        type,
+        childrens,
+        value,
+      });
+    }
+  }, [type, childrens, value]);
+
+  if (type === "childrens" && Array.isArray(childrens)) {
+    return (
+      <div className="w-full border p-4 my-2">
+        <label className="mb-3 text-sm font-medium text-black">{label}</label>
+        <div className="space-y-4">
+          {Array.isArray(value?.value)
+            ? value.value.map((line: any, lineIndex: number) => (
+                <div
+                  key={lineIndex}
+                  className="flex gap-4 items-start p-4 border rounded"
+                >
+                  {childrens.map((child, childIndex) => (
+                    <div key={childIndex} className="flex-1">
+                      <Input
+                        {...child}
+                        value={{
+                          errorMessage: "",
+                          value: line[child.proprety] || "",
+                        }}
+                        setValue={(childValue) =>
+                          handleChildChange(
+                            lineIndex,
+                            child.proprety,
+                            childValue
+                          )
+                        }
+                      />
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newValues = [...value.value];
+                      newValues.splice(lineIndex, 1);
+                      setValue({ ...value, value: newValues });
+                    }}
+                    className="px-2 py-1 bg-red-500 text-white rounded"
+                  >
+                    -
+                  </button>
+                </div>
+              ))
+            : null}
+          <button
+            type="button"
+            onClick={() => {
+              const currentValue = Array.isArray(value?.value)
+                ? value.value
+                : [];
+              setValue({
+                ...value,
+                value: [...currentValue, {}],
+              });
+            }}
+            className="px-4 py-2 bg-primary text-black rounded"
+          >
+            Ajouter une ligne
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">

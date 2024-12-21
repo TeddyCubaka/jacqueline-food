@@ -64,6 +64,7 @@ const Actions = (props: {
             placeholder: field.placeholder,
             formatData: field.formatData,
             proprety: field.proprety,
+            childrens: field.childrens,
             setValue: (value) => {
               setFormData((prev) => ({ ...prev, [field.proprety]: value }));
               setApiData((prev) => ({

@@ -5,11 +5,20 @@ export type DisplayColumn = { key: string; header: string };
 export type InputType = {
   label: string;
   proprety: string;
-  type?: "text" | "number" | "select" | "date" | "file" | "float" | "boolean";
+  type?:
+    | "text"
+    | "number"
+    | "select"
+    | "date"
+    | "file"
+    | "float"
+    | "boolean"
+    | "childrens";
   placeholder: string;
   options?: Array<{ label: string; value: string | number }>;
   endpoint?: string;
   formatData?: (data: any) => Array<{ label: string; value: string | number }>;
+  childrens?: InputType[];
 };
 
 export interface ModelFormat {
@@ -243,6 +252,27 @@ export const order: ModelFormat = {
       type: "select",
       endpoint: "/api/core/currency",
       placeholder: "devise",
+    },
+    {
+      label: "lignes de commandes",
+      proprety: "lines",
+      type: "childrens",
+      placeholder: "",
+      childrens: [
+        {
+          label: "produit",
+          proprety: "productId",
+          type: "select",
+          endpoint: "/api/core/product",
+          placeholder: "devise",
+        },
+        {
+          label: "quantité",
+          proprety: "quantity",
+          type: "text",
+          placeholder: "devise",
+        },
+      ],
     },
   ],
   include: {

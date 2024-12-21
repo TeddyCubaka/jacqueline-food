@@ -168,22 +168,23 @@ export function DataTable<T extends { id?: string | number }>({
                   {columns.map((column) => (
                     <td
                       key={`${item.id || index}-${column.key}`}
-                      className="px-4 py-3 whitespace-nowrap text-sm text-gray-500"
+                      className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 min-w-32"
                     >
                       {column.key == "url" ? (
                         <Image
                           src={
-                            String(item[column.key as keyof typeof item]) &&
-                            isValidURL(
-                              String(item[column.key as keyof typeof item])
-                            )
+                            String(item[column.key as keyof typeof item])
+                            //  &&
+                            // isValidURL(
+                            //   String(item[column.key as keyof typeof item])
+                            // )
                               ? String(item[column.key as keyof typeof item])
                               : notElement
                           }
                           width={100}
                           height={100}
                           alt="url image"
-                          className="border-2 border-green-500 rounded-md"
+                          className="border-2 border-green-500 rounded-md h-16 w-16"
                         />
                       ) : (
                         getNestedValue(
