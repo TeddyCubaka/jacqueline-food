@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { DataTable } from "@/components/table";
-import { FiDownload, FiPlus } from "react-icons/fi";
+import { FiPlus } from "react-icons/fi";
 import { useParams } from "next/navigation";
 import { ResponseData } from "@/types/reponse-data.type";
 import { Card, Modal } from "@mui/material";
@@ -10,6 +10,7 @@ import { InputType } from "@/app/api/core/[model]/config-data";
 import Loader from "@/components/atoms/loader";
 import { AlertStatus, JsonErrorAlert } from "@/components/atoms/display-error";
 import { FormatModelData } from "@/utils/format-select-options";
+import { LuRefreshCcw } from "react-icons/lu";
 
 const Actions = (props: {
   modelName: string | string[] | undefined;
@@ -109,7 +110,7 @@ const Actions = (props: {
           onClick={props.refreshData}
           className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center gap-2"
         >
-          <FiDownload />
+          <LuRefreshCcw />
           Refraichir
         </button>
         {/* <button className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center gap-2">

@@ -51,7 +51,7 @@ export function DataTable<T extends { id?: string | number }>({
   onRowSelect,
   actions,
   filters,
-  searchable = false,
+  searchable = true,
   searchKeys = [],
   className = "",
 }: TableProps<T>) {
