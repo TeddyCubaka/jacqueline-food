@@ -36,11 +36,16 @@ export async function GET(
       findMany: (args?: any) => Promise<any[]>;
     };
 
+    // return NextResponse.json({
+    //   code: 200,
+    //   message: "donnees trouvées pour les " + verboseName.plural,
+    //   data: searchParams,
+    // });
+    searchParams.include = {...searchParams.include, ...config[model as keyof typeof config].include } 
+
     const data = await prismaModel.findMany({
-      include: config[model as keyof typeof config].include,
       ...searchParams,
     });
-
 
     return NextResponse.json({
       code: 200,

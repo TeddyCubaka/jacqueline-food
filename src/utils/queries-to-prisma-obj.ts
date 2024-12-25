@@ -13,14 +13,13 @@ export class QueriesUtils {
     const segments = key.split("__");
     if (segments.length === 1) return { [key]: this.castValue(value) };
 
-    segments.push("__ws");
     value = this.castValue(value);
     return this.buildObject(segments, value);
   }
 
   private castValue(value: ValueType): ValueType {
     if (typeof value === "string") {
-      if (value == "") return "";
+      if (value === "") return "";
       if (!isNaN(+value)) return Number(value);
       if (value === "true") return true;
       if (value === "false") return false;
@@ -35,7 +34,7 @@ export class QueriesUtils {
   ): Record<string, any> {
     return segments.reduceRight<Record<string, any>>(
       (acc, key) => ({ [key]: acc }),
-      { [String(value)]: value } as Record<string, any>
+      value as any
     );
   }
 
@@ -55,8 +54,8 @@ export class QueriesUtils {
     return target;
   }
 
-  private isObject(value: any): value is Record<string, any> {
-    return value && typeof value === "object" && !Array.isArray(value);
+  private isObject(value: unknown): value is Record<string, any> {
+    return value !== null && typeof value === "object" && !Array.isArray(value);
   }
 
   public toPrismaFilterMap(queries: Record<string, any>): PrismaFilter {
@@ -101,10 +100,14 @@ export class QueriesUtils {
     }
 
     (["select", "include", "take", "skip"] as const).forEach((key) => {
-      if (!prismaFilters[key]) {
+      if (
+        prismaFilters[key] === undefined ||
+        Object.keys(prismaFilters[key] || {}).length === 0
+      ) {
         delete prismaFilters[key];
       }
     });
+
     return prismaFilters;
   }
 }

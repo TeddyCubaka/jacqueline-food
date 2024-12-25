@@ -53,7 +53,7 @@ export default function Products() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`/api/core/product`, {
+        const res = await fetch(`/api/core/product?limit=4`, {
           method: "GET",
         });
 
