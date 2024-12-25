@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/../lib/prisma";
 import * as config from "../config-data";
+import { PrismaFilter, QueriesUtils } from "@/utils/queries-to-prisma-obj";
 
 type Params = {
   params: {
@@ -28,9 +29,19 @@ export async function GET(request: Request, { params }: Params) {
       }) => Promise<any>;
     };
 
+    const url = new URL(request.url);
+    let searchParams: { [k: string]: string } | PrismaFilter =
+      Object.fromEntries(url.searchParams.entries());
+    const _queriesUtils = new QueriesUtils();
+    searchParams = _queriesUtils.toPrismaFilterMap(searchParams);
+
     const data = await prismaModel.findUnique({
-      where: { id: id },
-      include: config[model as keyof typeof config].include || {},
+      ...searchParams,
+      where: { id: id, ...searchParams.where },
+      include: {
+        ...config[model as keyof typeof config].include,
+        ...searchParams.include,
+      },
     });
 
     return NextResponse.json({
