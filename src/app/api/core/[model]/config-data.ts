@@ -320,3 +320,44 @@ export const order: ModelFormat = {
     };
   },
 };
+
+
+export const orderLine: ModelFormat = {
+  verboseName: {
+    single: "client",
+    plural: "clients",
+  },
+  searchKeys: ["fullName", "phone"],
+  displayColumns: [
+    { key: "order.referenceNumber.", header: "commande" },
+    { key: "Product.name", header: "produit" },
+    { key: "quantity", header: "quantité" },
+  ],
+  form: [
+    {
+      label: "nom complet",
+      proprety: "fullName",
+      type: "text",
+      placeholder: "Ex : john doe",
+    },
+    {
+      label: "numero de téléphone",
+      proprety: "phone",
+      type: "text",
+      placeholder: "Ex : +243 995 384 899",
+    },
+    {
+      label: "adresse physique",
+      proprety: "address",
+      type: "text",
+      placeholder: "Ex: kinshasa/mbobo",
+    },
+    {
+      label: "Mon Whatsapp est ouvert",
+      proprety: "isWhatsappOpen",
+      type: "boolean",
+      placeholder: "",
+    },
+  ],
+  include: {},
+};

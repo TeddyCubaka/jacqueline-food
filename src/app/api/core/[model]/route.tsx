@@ -3,6 +3,7 @@ import { prisma } from "@/../lib/prisma";
 import * as config from "./config-data";
 import { ResponseData } from "@/types/reponse-data.type";
 import { formatPrismaError } from "@/utils/format-prisma-error";
+import { PrismaFilter, QueriesUtils } from "@/utils/queries-to-prisma-obj";
 
 type Params = {
   params: {
@@ -16,6 +17,12 @@ export async function GET(
 ): Promise<NextResponse<ResponseData>> {
   try {
     const { model } = await params;
+    const url = new URL(request.url);
+    let searchParams: { [k: string]: string } | PrismaFilter =
+      Object.fromEntries(url.searchParams.entries());
+    const _queriesUtils = new QueriesUtils();
+    searchParams = _queriesUtils.toPrismaFilterMap(searchParams);
+
     const PrismaModel = prisma[model];
     if (!PrismaModel) {
       return NextResponse.json(
@@ -31,7 +38,9 @@ export async function GET(
 
     const data = await prismaModel.findMany({
       include: config[model as keyof typeof config].include,
+      ...searchParams,
     });
+
 
     return NextResponse.json({
       code: 200,
@@ -44,7 +53,6 @@ export async function GET(
       },
     });
   } catch (error: any) {
-    console.log(error);
     return NextResponse.json(
       { code: 400, message: "Une erreur s'est produite", error: error.message },
       { status: 400 }
@@ -73,12 +81,11 @@ export async function POST(request: Request, { params }: Params) {
     }
     const configModel = config[model as keyof typeof config];
     if (configModel.postSave) body = await configModel.postSave(body);
-    console.log(body)
+    console.log(body);
     const prismaModel: any = prisma[model as keyof typeof prisma];
     const createdRecord = await prismaModel.create({
       data: body,
     });
-
 
     return NextResponse.json(
       {

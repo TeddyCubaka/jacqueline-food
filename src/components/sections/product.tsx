@@ -17,7 +17,7 @@ type ProductType = {
 const ProductCard = (product: ProductType) => {
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition duration-300">
-      <div className="h-60 bg-green-100 rounded-lg mb-4 overflow-hidden">
+      <div className="h-60 w-72 bg-green-100 rounded-lg mb-4 overflow-hidden">
         {product.url && product.url.length > 0 ? (
           <Image
             height={200}
