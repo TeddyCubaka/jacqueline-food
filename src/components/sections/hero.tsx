@@ -1,4 +1,7 @@
+import { useRouter } from "next/navigation";
+
 export default function Hero() {
+  const router = useRouter();
   return (
     <div id="home" className="relative pt-16">
       <div
@@ -18,9 +21,12 @@ export default function Hero() {
               Des Jus 100% Naturels
             </h1>
             <p className="text-xl md:text-2xl text-white mb-8">
-              Découvrez nos jus pressés à froid, sans additifs ni conservateurs
+              Découvrez nos jus pasteurisés, sans additifs ni conservateurs
             </p>
-            <button className="bg-white text-green-600 px-8 py-3 rounded-full font-semibold hover:bg-green-50 transition duration-300">
+            <button
+              onClick={() => router.push("products")}
+              className="bg-white text-green-600 px-8 py-3 rounded-full font-semibold hover:bg-green-50 transition duration-300"
+            >
               Découvrir nos produits
             </button>
           </div>
