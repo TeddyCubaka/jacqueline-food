@@ -48,7 +48,7 @@ export const ProductCard = (product: ProductType) => {
           </button>
           <button
             onClick={() => router.push(`products/${product.id}`)}
-            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+            className="hidden bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
           >
             voir
           </button>
