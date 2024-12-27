@@ -15,8 +15,8 @@ interface ProductCategory {
 const ProductCategoryCard = (category: ProductCategory) => {
   return (
     <div className="flex flex-col gap-5">
-      <h2 className="text-xl font-bold">{category.name}</h2>
-      <div>
+      <h2 className="text-xl font-bold !sticky">{category.name}</h2>
+      <div className="flex flex-wrap gap-5 max-md:grid max-md:grid-cols-2">
         {category.products.map((product: ProductType) => (
           <ProductCard {...product} key={product.id} />
         ))}

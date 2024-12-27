@@ -37,7 +37,12 @@ export default function Products() {
     fetchData();
   }, []);
 
-  if (loading) return <div className="w-full h-full"><Loader /></div>;
+  if (loading)
+    return (
+      <div className="w-full h-full">
+        <Loader />
+      </div>
+    );
 
   if (error !== null)
     return (
@@ -76,11 +81,17 @@ export default function Products() {
             voir plus
           </Link>
         </h2>
-        <div className="flex justify-center gap-8">
+        <div className="flex justify-center gap-5 max-md:grid max-md:grid-cols-2">
           {data?.data.map((product: ProductType) => (
             <ProductCard {...product} key={product.id} />
           ))}
         </div>
+        <button
+          className="md:hidden mt-5 w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 flex items-center gap-2 justify-center"
+          onClick={() => {router.push('products')}}
+        >
+          voir plus
+        </button>
       </div>
     </section>
   );

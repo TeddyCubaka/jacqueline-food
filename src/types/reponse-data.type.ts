@@ -14,4 +14,10 @@ export interface ResponseData {
     postPath?: string;
     form?: InputType[];
   };
+  devMeta?: {
+    [key: string]: any;
+  };
+  "dev-meta"?: {
+    [key: string]: any;
+  };
 }

@@ -8,7 +8,7 @@ import Input, { InputPropsType, InputValueType } from "@/components/form/input";
 import { FormatModelData } from "@/utils/format-select-options";
 import Loader from "@/components/atoms/loader";
 
-export default function DashboardPage({ params }: { params: any }) {
+export default function DashboardPage() {
   const { path, id } = useParams();
   const [data, setData] = useState<ResponseData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
