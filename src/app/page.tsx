@@ -1,4 +1,5 @@
 "use client";
+import TeamCarousel from "@/components/atoms/team-presentation";
 import Footer from "@/components/footer";
 import Navbar from "@/components/nav-bar";
 import About from "@/components/sections/about";
@@ -7,11 +8,12 @@ import Products from "@/components/sections/product";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white border">
       <Navbar />
       <Hero />
       <Products />
       <About />
+      <TeamCarousel />
       <Footer />
     </div>
   );
