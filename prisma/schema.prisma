@@ -83,7 +83,8 @@ model Client {
   updateBy  String?
   createBy  String?
   isDeleted Boolean?  @default(false)
-  orders     Order[]
+  orders    Order[]
+  Booking   Booking[]
 }
 
 // enum OrderStatus {
@@ -129,4 +130,20 @@ model OrderLine {
 
   order   Order   @relation(fields: [orderId], references: [id])
   Product Product @relation(fields: [productId], references: [id])
+}
+
+model Booking {
+  id          String   @id @unique @default(uuid())
+  clientId    String
+  data        DateTime
+  serviceType String
+  place       String
+
+  updateBy  String?
+  createBy  String?
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  isDeleted Boolean?  @default(false)
+
+  client Client @relation(fields: [clientId], references: [id])
 }
