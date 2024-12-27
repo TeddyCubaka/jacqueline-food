@@ -135,7 +135,7 @@ model OrderLine {
 model Booking {
   id          String   @id @unique @default(uuid())
   clientId    String
-  data        DateTime
+  date        DateTime
   serviceType String
   place       String
 
