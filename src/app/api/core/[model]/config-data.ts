@@ -321,11 +321,10 @@ export const order: ModelFormat = {
   },
 };
 
-
 export const orderLine: ModelFormat = {
   verboseName: {
-    single: "client",
-    plural: "clients",
+    single: "ligne de commandes",
+    plural: "lignes de commandes",
   },
   searchKeys: ["fullName", "phone"],
   displayColumns: [
@@ -357,6 +356,66 @@ export const orderLine: ModelFormat = {
       proprety: "isWhatsappOpen",
       type: "boolean",
       placeholder: "",
+    },
+  ],
+  include: {},
+};
+
+export const booking: ModelFormat = {
+  verboseName: {
+    single: "client",
+    plural: "clients",
+  },
+  searchKeys: ["client.fullName", "date", "serviceType", "place"],
+  displayColumns: [
+    { key: "client.fullName", header: "client" },
+    { key: "client.isWhatsappOpen", header: "whastapp ?" },
+    { key: "date", header: "date" },
+    { key: "serviceType", header: "type de service" },
+    { key: "place", header: "lieux" },
+  ],
+  form: [
+    {
+      label: "client",
+      proprety: "clientId",
+      type: "select",
+      placeholder: "",
+      endpoint: "/api/core/client",
+      formatData: (data) => {
+        return data.map((value: { fullName: string; id: string }) => ({
+          label: value.fullName,
+          value: value.id,
+        }));
+      },
+    },
+    {
+      label: "numero de téléphone",
+      proprety: "date",
+      type: "date",
+      placeholder: "votre date ici",
+    },
+    {
+      label: "type de service",
+      proprety: "serviceType",
+      type: "select",
+      placeholder: "",
+      options: [
+        { label: "professionnel", value: "professionnel" },
+        { label: "privé", value: "privé" },
+      ],
+    },
+    {
+      label: "Lieux",
+      proprety: "place",
+      type: "select",
+      placeholder: "",
+      options: [
+        { label: "restaurant", value: "restaurant" },
+        { label: "hotel", value: "hotel" },
+        { label: "evenement", value: "evenement" },
+        { label: "à la maison", value: "à la maison" },
+        { label: "au bureau", value: "au bureau" },
+      ],
     },
   ],
   include: {},

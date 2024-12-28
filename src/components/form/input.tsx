@@ -40,8 +40,9 @@ const Input = (props: InputPropsType) => {
       }
     };
 
-    fetchOptions();
-  }, [endpoint, formatData]);
+    if (options) setDynamicOptions(options);
+    else fetchOptions();
+  }, [endpoint, formatData, options]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>

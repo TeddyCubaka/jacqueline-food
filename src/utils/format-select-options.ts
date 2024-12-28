@@ -32,4 +32,16 @@ export class FormatModelData {
         value: data.id,
       })),
   };
+
+  booking: {
+    [key: string]: (
+      data: any
+    ) => Array<{ label: string; value: string | number }>;
+  } = {
+    clientId: (datas: { [key: string]: any }[]) =>
+      datas.map((data) => ({
+        label: data.fullName,
+        value: data.id,
+      })),
+  };
 }
