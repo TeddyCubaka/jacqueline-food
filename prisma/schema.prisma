@@ -87,12 +87,12 @@ model Client {
   Booking   Booking[]
 }
 
-// enum OrderStatus {
-//   pending
-//   validate
-//   inProgress
-//   delivred
-// }
+enum OrderStatus {
+  pending
+  validate
+  inProgress
+  delivred
+}
 
 model Order {
   id              String @id @unique @default(uuid())
@@ -101,7 +101,7 @@ model Order {
   currencyId      String
   referenceNumber String
 
-  status   String
+  status   OrderStatus
   isClosed Boolean @default(false)
 
   updateBy  String?
