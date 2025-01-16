@@ -23,10 +23,11 @@ export default function Hero() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
           <div className="text-center w-full">
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-              Des Jus 100% Naturels
+              Des produits 100% Naturels
             </h1>
             <p className="text-xl md:text-2xl text-white mb-8">
-              Découvrez nos jus pasteurisés, sans additifs ni conservateurs
+              {/* Découvrez nos jus pasteurisés, sans additifs ni conservateurs */}
+              choisissez la sante !
             </p>
             <div className="flex gap-5 max-md:flex-col w-full justify-center">
               <button
@@ -35,7 +36,7 @@ export default function Hero() {
                 }}
                 className="w-full border-2 border-white bg-white text-green-600 px-8 py-3 rounded-full font-semibold hover:bg-green-50 transition duration-300"
               >
-                Faire une reservation pour deguster
+                reserver une degustation
               </button>
               <button
                 onClick={() => {

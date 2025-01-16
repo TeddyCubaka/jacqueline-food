@@ -2,6 +2,8 @@ import { useState } from "react";
 import { FaCartPlus } from "react-icons/fa6";
 import ImageDisplay from "./image";
 import { useRouter } from "next/navigation";
+import { useCartStore } from "@/store/cart-store";
+// import { useCart } from "./speedDial";
 
 export type ProductType = {
   id: string;
@@ -21,6 +23,7 @@ export type ProductType = {
 
 export const ProductCard = (product: ProductType) => {
   const router = useRouter();
+  const { addItem } = useCartStore();
   return (
     <div className="bg-white w-fit rounded-xl shadow-lg p-6 max-md:p-3 hover:shadow-xl transition duration-300 max-md:w-full max-md:h-80 max-md:border max-md:border-green-500 flex flex-col justify-between">
       <div className="w-72 bg-green-100 rounded-lg mb-4 overflow-hidden max-md:w-full max-md:h-1/2">
@@ -43,7 +46,19 @@ export const ProductCard = (product: ProductType) => {
           {product.price} {product.currency.name}
         </span>
         <span className="flex gap-3 items-center">
-          <button className="text-green-600 px-4 py-2 rounded-lg bg-transparent transition hover:text-green-700">
+          <button
+            onClick={() => {
+              addItem({
+                id: product.id,
+                name: product.name,
+                price: +product.price,
+                quantity: 1,
+                image: product.url,
+                description: product.description,
+              });
+            }}
+            className="text-green-600 px-4 py-2 rounded-lg bg-transparent transition hover:text-green-700"
+          >
             <FaCartPlus size={25} />
           </button>
           <button

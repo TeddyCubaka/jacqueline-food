@@ -63,6 +63,12 @@ const formular: InputType[] = [
       { label: "au bureau", value: "au bureau" },
     ],
   },
+  {
+    label: "description",
+    proprety: "description",
+    type: "text",
+    placeholder: "votre date ici",
+  },
 ];
 
 export const BookingComponent = () => {
