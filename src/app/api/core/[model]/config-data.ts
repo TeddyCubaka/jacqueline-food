@@ -116,6 +116,7 @@ export const currency: ModelFormat = {
   displayColumns: [
     { key: "name", header: "nom" },
     { key: "exchangeRate", header: "taux de change" },
+    { key: "symbol", header: "symbole" },
   ],
   searchKeys: ["name"],
   form: [
@@ -126,7 +127,13 @@ export const currency: ModelFormat = {
       placeholder: "nom de la categorie",
     },
     {
-      label: "tax de change",
+      label: "symbole",
+      proprety: "symbol",
+      type: "text",
+      placeholder: "ex : fc, $",
+    },
+    {
+      label: "tax de change par rapport au franc",
       proprety: "exchangeRate",
       type: "number",
       placeholder: "taux de change",

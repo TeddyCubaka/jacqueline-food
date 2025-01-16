@@ -24,6 +24,7 @@ model Currency {
   id           String @id @unique @default(uuid())
   name         String @unique
   exchangeRate Int
+  symbol       String
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
@@ -102,7 +103,7 @@ model Order {
   referenceNumber String
 
   status   OrderStatus
-  isClosed Boolean @default(false)
+  isClosed Boolean     @default(false)
 
   updateBy  String?
   createBy  String?
